@@ -5,6 +5,7 @@
     </v-card-title>
     <v-card-subtitle>
       <div>Apples to apples on used cars</div>
+      <div>200,000 miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
       <v-text-field label="Name" v-model="car.name"></v-text-field>
