@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="3" color="brown" variant="tonal">
     <v-card-title>
-      <div class="text-h4">Cents per Mile</div>
+      <div class="text-h4">CentsPer Mile</div>
     </v-card-title>
     <v-card-subtitle>
       <div>Apples to apples on used cars</div>

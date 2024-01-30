@@ -3,16 +3,17 @@
     <v-app>
       <v-app-bar elevation="2" variant="tonal" color="brown-lighten-2">
         <template v-slot:prepend>
-          <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        </template>
-
-        <v-app-bar-title>
+          <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
           <v-img
             :width="42"
             src="~/assets/images/PennyTire.png"
             class="float-left mr-2"
           >
-          </v-img>
+          </v-img>        
+        </template>
+
+        <v-app-bar-title>
+
           <div class="text-h4">CentsPer.com</div>
         </v-app-bar-title>
       </v-app-bar>
