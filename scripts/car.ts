@@ -4,6 +4,6 @@ export class Car{
   
   public centsPerMile(lifetimeMiles: number = 200000): number{
     let result = (this.price / (lifetimeMiles - this.miles)) * 100;
-    return Math.round(result * 10) / 10;
+    return Math.round(result * 100) / 100;
   }
 }
