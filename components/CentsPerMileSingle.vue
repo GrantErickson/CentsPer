@@ -18,7 +18,7 @@
 
 <script setup>
 import { reactive } from "vue";
-import { Car } from "~/scripts/Car.ts";
+import { Car } from "~/scripts/car.ts";
 
 const car = reactive(new Car("My Car", 10000, 100000));
 </script>
