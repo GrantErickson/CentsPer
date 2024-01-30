@@ -10,15 +10,19 @@
       <v-text-field label="Name" v-model="car.name"></v-text-field>
       <v-text-field label="Price" v-model="car.price"></v-text-field>
       <v-text-field label="Miles" v-model="car.miles"></v-text-field>
-      <v-text-field label="Cents per Mile" v-model="car.centsPerMile" readonly>
+      <v-text-field
+        label="Cents per Mile"
+        :model-value="car.centsPerMile()"
+        readonly
+      >
       </v-text-field>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { ref } from "vue";
 import { Car } from "~/scripts/car.ts";
 
-const car = reactive(new Car("My Car", 10000, 100000));
+const car = ref(new Car("My Car", 10000, 100000));
 </script>
