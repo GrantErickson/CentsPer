@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout>
     <v-app>
-      <v-app-bar :elevation="2">
+      <v-app-bar elevation="2" variant="tonal" color="brown-lighten-2">
         <template v-slot:prepend>
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
         </template>
@@ -17,7 +17,7 @@
         </v-app-bar-title>
       </v-app-bar>
       <v-main>
-        <v-container fluid>
+        <v-container>
           <NuxtPage/>
         </v-container>
       </v-main>
