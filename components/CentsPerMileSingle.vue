@@ -17,13 +17,56 @@
         readonly
       >
       </v-text-field>
+      <v-btn @click="save" color="blue">Save</v-btn>
+
+      <v-list v-for="(car, index) in cars" :key="car.key">
+        <v-list-item @click="load(index)" elevation="4">
+          {{ car.name }} @ {{ car.centsPerMile() }}¢ per mile
+          <v-icon @click="remove(index)" color="red" icon="mdi-delete">
+          </v-icon>
+        </v-list-item>
+      </v-list>
     </v-card-text>
   </v-card>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import { Car } from "~/scripts/car.ts";
+<script lang="ts" setup>
+import { ref, reactive } from "vue";
+import { Car } from "~/scripts/car";
 
 const car = ref(new Car("My Car", 10000, 100000));
+const cars = reactive(new Array<Car>());
+
+onMounted(() => {
+  loadCars();
+});
+
+const loadCars = () => {
+  const carsJson = localStorage.getItem("cars");
+  if (carsJson) {
+    cars.push(...JSON.parse(carsJson).map((car: any) => Car.deserialize(car)));
+  }
+};
+
+const saveCars = () => {
+  console.log("Saving Cars");
+  localStorage.setItem("cars", JSON.stringify(cars));
+};
+
+const save = () => {
+  console.log("Saving");
+  console.log(cars);
+  cars.push(Car.deserialize(car.value));
+  saveCars();
+};
+
+const load = (index: number) => {
+  console.log("Loading");
+  car.value = Car.deserialize(cars[index]);
+};
+const remove = (index: number) => {
+  console.log("Loading");
+  cars.splice(index, 1);
+  saveCars();
+};
 </script>
