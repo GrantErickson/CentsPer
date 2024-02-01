@@ -8,10 +8,7 @@ export class Car {
   public readonly key: string = Math.random().toString();
 
   public static deserialize(newCar: any) {
-    let car = new Car();
-    car.name = newCar.name;
-    car.price = newCar.price;
-    car.miles = newCar.miles;
+    let car = new Car(newCar.name, newCar.price, newCar.miles);
     return car;
   }
 
