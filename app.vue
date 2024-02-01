@@ -6,7 +6,7 @@
           <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
           <v-img
             :width="42"
-            src="~/assets/images/PennyTire.png"
+            src="~/assets/images/PennyTire128.png"
             class="float-left mr-2"
           >
           </v-img>        
