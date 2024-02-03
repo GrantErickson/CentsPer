@@ -24,22 +24,27 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-text-field label="Price" v-model="car.price"></v-text-field>
+          <v-text-field
+            label="Price"
+            v-model="car.price"
+            prepend-inner-icon="mdi-currency-usd"
+          ></v-text-field>
         </v-col>
         <v-col>
           <v-text-field label="Miles" v-model="car.miles"></v-text-field>
         </v-col>
         <v-col>
           <v-text-field
-            label="Hotness"
+            label="Hotness %"
             v-model="car.hotness"
             type="number"
+            append-inner-icon="mdi-percent"
           ></v-text-field>
         </v-col>
         <v-col>
           <v-text-field
             label="Cents per Mile"
-            :model-value="car.centsPerMile()"
+            :model-value="car.centsPerMile() + ' ¢/mile'"
             readonly
           >
           </v-text-field>
