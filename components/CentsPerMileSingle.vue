@@ -8,9 +8,13 @@
       <div>200,000 miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
-      <v-text-field label="Name" v-model="car.name"></v-text-field>
+      <v-text-field label="Make" v-model="car.make"></v-text-field>
+      <v-text-field label="Model" v-model="car.model"></v-text-field>
+      <v-text-field label="Year" v-model="car.year"></v-text-field>
+      <v-text-field label="Hotness" v-model="car.hotness"></v-text-field>
       <v-text-field label="Price" v-model="car.price"></v-text-field>
       <v-text-field label="Miles" v-model="car.miles"></v-text-field>
+      <v-text-field label="Location" v-model="car.location"></v-text-field>
       <v-text-field
         label="Cents per Mile"
         :model-value="car.centsPerMile()"
@@ -21,7 +25,8 @@
 
       <v-list v-for="(car, index) in cars" :key="car.key">
         <v-list-item @click="load(index)" elevation="4">
-          {{ car.name }} @ {{ car.centsPerMile() }}¢ per mile
+          {{ car.year }} {{ car.make }} {{ car.model }} at {{ car.location }} with {{ car.hotness }}% hotness =
+          {{ car.centsPerMile() }}¢ per mile 
           <v-icon @click="remove(index)" color="red" icon="mdi-delete">
           </v-icon>
         </v-list-item>
@@ -34,7 +39,7 @@
 import { ref, reactive } from "vue";
 import { Car } from "~/scripts/car";
 
-const car = ref(new Car("My Car", 10000, 100000));
+const car = ref(new Car("Unknown", "Unknown", 2020, 10000, 100000, "A Friend"));
 const cars = reactive(new Array<Car>());
 
 onMounted(() => {
