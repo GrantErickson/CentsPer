@@ -5,49 +5,70 @@
     </v-card-title>
     <v-card-subtitle>
       <div>Apples to apples on used cars</div>
-      <div>200,000 miles is used as a car's lifetime</div>
+      <div>{{ maxMiles }} miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
       <v-row>
-        <v-col>
-          <v-text-field label="Make" v-model="car.make"></v-text-field>
-        </v-col>
-        <v-col>
-          <v-text-field label="Model" v-model="car.model"></v-text-field>
-        </v-col>
-        <v-col>
+        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
           <v-text-field label="Year" v-model="car.year"></v-text-field>
         </v-col>
-        <v-col>
+        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
+          <v-text-field label="Make" v-model="car.make"></v-text-field>
+        </v-col>
+        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
+          <v-text-field label="Model" v-model="car.model"></v-text-field>
+        </v-col>
+        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
           <v-text-field label="Location" v-model="car.location"></v-text-field>
         </v-col>
       </v-row>
+
       <v-row>
-        <v-col>
-          <v-text-field
-            label="Price"
-            v-model="car.price"
-            prepend-inner-icon="mdi-currency-usd"
-          ></v-text-field>
+        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                label="Price"
+                v-model="car.price"
+                prepend-inner-icon="mdi-currency-usd"
+              />
+            </v-col>
+            <v-col cols="6">
+              <div class="math">÷ ( {{ maxMiles }} -</div>
+            </v-col>
+          </v-row>
         </v-col>
-        <v-col>
-          <v-text-field label="Miles" v-model="car.miles"></v-text-field>
+        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
+          <v-row>
+            <v-col cols="6">
+              <v-text-field label="Miles" v-model="car.miles" />
+            </v-col>
+            <v-col cols="6"> <div class="math">) x</div> </v-col>
+          </v-row>
         </v-col>
-        <v-col>
-          <v-text-field
-            label="Hotness %"
-            v-model="car.hotness"
-            type="number"
-            append-inner-icon="mdi-percent"
-          ></v-text-field>
+        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                label="Hotness %"
+                v-model="car.hotness"
+                type="number"
+                append-inner-icon="mdi-percent"
+              />
+            </v-col>
+            <v-col cols="6"> <div class="math">÷ 100 =</div></v-col>
+          </v-row>
         </v-col>
-        <v-col>
-          <v-text-field
-            label="Cents per Mile"
-            :model-value="car.centsPerMile() + ' ¢/mile'"
-            readonly
-          >
-          </v-text-field>
+        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                label="Cents per Mile"
+                :model-value="car.centsPerMile() + ' ¢/mile'"
+                readonly
+              />
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 
@@ -72,6 +93,7 @@ import { Car } from "~/scripts/car";
 
 const car = ref(new Car("Unknown", "Unknown", 2020, 10000, 100000, "A Friend"));
 const cars = reactive(new Array<Car>());
+const maxMiles = ref(200000);
 
 onMounted(() => {
   loadCars();
@@ -106,3 +128,12 @@ const remove = (index: number) => {
   saveCars();
 };
 </script>
+
+<style scoped>
+.math {
+  display: flex;
+  align-items: center;
+  font-size: 1.4em;
+  margin-top: 1.2em;
+}
+</style>
