@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.8",
-    "@mdi/font": "^7.4.47"
+    "@mdi/font": "^7.4.47",
+    "apexcharts": "^3.45.2",
+    "vue3-apexcharts": "^1.4.4"
   }
 }

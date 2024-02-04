@@ -84,16 +84,43 @@
         </v-list-item>
       </v-list>
     </v-card-text>
+    <v-card-actions>
+      <div>
+        <apexchart
+          width="500"
+          type="bar"
+          :options="options"
+          :series="series"
+        ></apexchart>
+      </div>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { Car } from "~/scripts/car";
+import VueApexCharts from "vue3-apexcharts";
 
 const car = ref(new Car("Unknown", "Unknown", 2020, 10000, 100000, "A Friend"));
 const cars = reactive(new Array<Car>());
 const maxMiles = ref(200000);
+
+const options = ref({
+  chart: {
+    id: "cars",
+  },
+  xaxis: {
+    categories: cars.map((car) => car.make + " " + car.model),
+  },
+});
+
+const series = ref([
+  {
+    name: "Cents per Mile",
+    data: cars.map((car) => car.centsPerMile()),
+  },
+]);
 
 onMounted(() => {
   loadCars();
