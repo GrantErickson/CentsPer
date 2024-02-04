@@ -85,14 +85,16 @@
       </v-list>
     </v-card-text>
     <v-card-actions>
-      <div>
-        <apexchart
-          width="500"
-          type="bar"
-          :options="options"
-          :series="series"
-        ></apexchart>
-      </div>
+      <v-row>
+        <v-col cols="12">
+          <apexchart
+            height="300"
+            type="bar"
+            :options="options"
+            :series="series"
+          />
+        </v-col>
+      </v-row>
     </v-card-actions>
   </v-card>
 </template>
@@ -106,24 +108,33 @@ const car = ref(new Car("Unknown", "Unknown", 2020, 10000, 100000, "A Friend"));
 const cars = reactive(new Array<Car>());
 const maxMiles = ref(200000);
 
-const options = ref({
-  chart: {
-    id: "cars",
-  },
-  xaxis: {
-    categories: cars.map((car) => car.make + " " + car.model),
-  },
-});
+const options = ref({});
+const series = ref();
 
-const series = ref([
-  {
-    name: "Cents per Mile",
-    data: cars.map((car) => car.centsPerMile()),
-  },
-]);
+const setChart = () => {
+  options.value = {
+    chart: {
+      id: "cars",
+    },
+    carCount: cars.length,
+    name: car.value.make,
+    xaxis: {
+      categories: cars.map((car) => car.make + " " + car.model),
+    },
+    maintainAspectRatio: false,
+  };
+
+  series.value = [
+    {
+      name: "Cents per Mile",
+      data: cars.map((car) => car.centsPerMile()),
+    },
+  ];
+};
 
 onMounted(() => {
   loadCars();
+  setChart();
 });
 
 const loadCars = () => {
@@ -143,6 +154,7 @@ const save = () => {
   console.log(cars);
   cars.push(Car.deserialize(car.value));
   saveCars();
+  setChart();
 };
 
 const load = (index: number) => {
@@ -153,6 +165,7 @@ const remove = (index: number) => {
   console.log("Loading");
   cars.splice(index, 1);
   saveCars();
+  setChart();
 };
 </script>
 
