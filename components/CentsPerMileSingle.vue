@@ -72,17 +72,39 @@
         </v-col>
       </v-row>
 
-      <v-btn @click="save" color="blue">Save</v-btn>
+      <v-btn @click="save" color="blue" class="mb-5">Save</v-btn>
 
-      <v-list v-for="(car, index) in cars" :key="car.key">
-        <v-list-item @click="load(index)" elevation="4">
-          {{ car.year }} {{ car.make }} {{ car.model }} at
-          {{ car.location }} with {{ car.hotness }}% hotness =
-          {{ car.centsPerMile() }}¢ per mile
-          <v-icon @click="remove(index)" color="red" icon="mdi-delete">
-          </v-icon>
-        </v-list-item>
-      </v-list>
+      <v-row>
+        <v-col
+          v-for="(car, index) in cars"
+          :key="car.key"
+          cols="12"
+          class="v-col-md-6 v-col-lg-4"
+        >
+          <v-card
+            class="mx-auto"
+            :title="car.centsPerMile() + '¢/mile'"
+            :subtitle="car.year + ' ' + car.make + ' ' + car.model"
+          >
+            <template v-slot:prepend>
+              <v-avatar color="blue-darken-2">
+                <v-icon icon="mdi-car"></v-icon>
+              </v-avatar>
+            </template>
+            <template v-slot:append>
+              <v-avatar size="24" style="font-size: 2em">
+                {{ car.hotnessIcon }}
+              </v-avatar>
+            </template>
+            <v-card-text>
+              {{ car.location }}
+            </v-card-text>
+            <v-card-actions>
+              <v-icon @click="remove(index)" color="red" icon="mdi-delete" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-card-text>
     <v-card-actions>
       <v-row>
@@ -162,6 +184,10 @@ const load = (index: number) => {
   car.value = Car.deserialize(cars[index]);
 };
 const remove = (index: number) => {
+  // Prompt for confirmation
+  if (!confirm("Are you sure you want to delete this car?")) {
+    return;
+  }
   console.log("Loading");
   cars.splice(index, 1);
   saveCars();

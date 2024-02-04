@@ -25,7 +25,33 @@ export class Car {
   }
 
   public centsPerMile(lifetimeMiles: number = 200000): number {
-    let result = (this.price / (lifetimeMiles - this.miles)) * (100 + (100-this.hotness));
+    let result =
+      (this.price / (lifetimeMiles - this.miles)) *
+      (100 + (100 - this.hotness));
     return Math.round(result * 100) / 100;
+  }
+
+  public get hotnessIcon() {
+    if (this.hotness > 90) {
+      return "🔥";
+    } else if (this.hotness > 80) {
+      return "😎";
+    } else if (this.hotness > 70) {
+      return "😀";
+    } else if (this.hotness > 60) {
+      return "🙂";
+    } else if (this.hotness > 50) {
+      return "😐";
+    } else if (this.hotness > 40) {
+      return "😕";
+    } else if (this.hotness > 30) {
+      return "😟";
+    } else if (this.hotness > 20) {
+      return "😢";
+    } else if (this.hotness > 10) {
+      return "😭";
+    } else {
+      return "💀";
+    }
   }
 }
