@@ -8,100 +8,114 @@
       <div>{{ maxMiles }} miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
-      <v-row>
-        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-select label="Year" v-model="car.year" :items="carOptions.years" />
-        </v-col>
-        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-select label="Make" v-model="car.make" :items="makes" />
-        </v-col>
-        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-select label="Model" v-model="car.model" :items="models" />
-        </v-col>
-        <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-select label="Style" v-model="car.style" :items="styles" />
-        </v-col>
-      </v-row>
+      <div v-if="car != null">
+        <v-row>
+          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
+            <v-autocomplete
+              label="Year"
+              v-model="car.year"
+              :items="carOptions.years"
+            />
+          </v-col>
+          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
+            <v-autocomplete label="Make" v-model="car.make" :items="makes" />
+          </v-col>
+          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
+            <v-autocomplete label="Model" v-model="car.model" :items="models" />
+          </v-col>
+          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
+            <v-autocomplete label="Style" v-model="car.style" :items="styles" />
+          </v-col>
+        </v-row>
 
-      <v-row>
-        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
-          <v-row>
-            <v-col cols="6">
-              <v-text-field
-                label="Price"
-                v-model="car.price"
-                prepend-inner-icon="mdi-currency-usd"
-              />
-            </v-col>
-            <v-col cols="6">
-              <div class="math">÷ ( {{ maxMiles }} -</div>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
-          <v-row>
-            <v-col cols="6">
-              <v-text-field label="Miles" v-model="car.miles" />
-            </v-col>
-            <v-col cols="6"> <div class="math">) x</div> </v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
-          <v-row>
-            <v-col cols="6">
-              <v-text-field
-                label="Hotness %"
-                v-model="car.hotness"
-                type="number"
-                append-inner-icon="mdi-percent"
-              />
-            </v-col>
-            <v-col cols="6"> <div class="math">÷ 100 =</div></v-col>
-          </v-row>
-        </v-col>
-        <v-col cols="12" class="v-col-md-6 v-col-lg-3">
-          <v-row>
-            <v-col cols="6">
-              <v-text-field
-                label="Cents per Mile"
-                :model-value="car.centsPerMile() + ' ¢/mile'"
-                readonly
-              />
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+        <v-row>
+          <v-col cols="12" class="v-col-md-9 v-col-lg-10">
+            <v-text-field label="Details" v-model="car.details" />
+          </v-col>
+          <v-col cols="12" class="v-col-md-3 v-col-lg-2">
+            <v-select
+              label="Hotness"
+              v-model="car.hotness"
+              :items="[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]"
+            />
+          </v-col>
+        </v-row>
 
-      <v-btn @click="save" color="blue" class="mb-5">Save</v-btn>
+        <v-row>
+          <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+            <v-text-field
+              label="Price"
+              v-model="car.price"
+              prepend-inner-icon="mdi-currency-usd"
+              type="number"
+            />
+          </v-col>
+          <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+            <v-text-field label="Miles" v-model="car.miles" type="number" />
+          </v-col>
+          <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+            <v-text-field
+              label="Cents per Mile"
+              :model-value="car.centsPerMile() + ' ¢/mile'"
+              readonly
+            />
+          </v-col>
+        </v-row>
+      </div>
 
       <v-row>
         <v-col
-          v-for="(car, index) in cars"
-          :key="car.key"
+          v-for="(aCar, index) in cars"
+          :key="aCar.key"
           cols="12"
           class="v-col-md-6 v-col-lg-4"
         >
           <v-card
             class="mx-auto"
-            :title="car.centsPerMile() + '¢/mile'"
-            :subtitle="car.year + ' ' + car.make + ' ' + car.model"
+            :title="aCar.centsPerMile() + '¢/mile'"
+            :subtitle="aCar.year + ' ' + aCar.make + ' ' + aCar.model"
+            @click="select(index)"
+            :color="aCar == car ? 'blue' : ''"
+            :variant="variant(aCar)"
+            tonal
+            elevation="5"
           >
+            <template v-slot:prepend>
+              <v-avatar color="blue-darken-2">
+                <v-icon :icon="aCar.carIcon"></v-icon>
+              </v-avatar>
+            </template>
+            <template v-slot:append>
+              <v-avatar size="24" style="font-size: 2em">
+                {{ aCar.hotnessIcon }}
+              </v-avatar>
+            </template>
+            <v-card-text>
+              {{ aCar.details }}
+              {{ aCar.carIcon }}
+            </v-card-text>
+            <v-card-actions>
+              <v-icon
+                @click="copy(index)"
+                color="blue"
+                icon="mdi-content-copy"
+              />
+              <v-spacer></v-spacer>
+              <v-icon @click="remove(index)" color="red" icon="mdi-delete" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+          <v-card class="mx-auto" title="Add Car" @click="addCar" color="green">
             <template v-slot:prepend>
               <v-avatar color="blue-darken-2">
                 <v-icon icon="mdi-car"></v-icon>
               </v-avatar>
             </template>
             <template v-slot:append>
-              <v-avatar size="24" style="font-size: 2em">
-                {{ car.hotnessIcon }}
-              </v-avatar>
+              <v-avatar size="24" style="font-size: 2em"> </v-avatar>
             </template>
-            <v-card-text>
-              {{ car.location }}
-            </v-card-text>
-            <v-card-actions>
-              <v-icon @click="remove(index)" color="red" icon="mdi-delete" />
-            </v-card-actions>
+            <v-card-text> </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -129,9 +143,7 @@ import VueApexCharts from "vue3-apexcharts";
 
 const carOptions = new CarOptions();
 
-const car: Ref<Car> = ref(
-  new Car(2018, "Subaru", "Forester", "SUV", 28000, 32000, "A Friend")
-);
+const car: Ref<Car> = ref(new Car(0, "", "", "", 0, 0, ""));
 const cars = reactive(new Array<Car>());
 const maxMiles = ref(200000);
 const makes: Ref<string[]> = ref([]);
@@ -142,6 +154,8 @@ const styles: Ref<string[]> = ref([]);
 watch(
   () => car.value.year,
   async () => {
+    if (!car.value) return;
+
     makes.value = await carOptions.makes(car.value.year);
     if (makes.value.indexOf(car.value.make) == -1) {
       car.value.make = "";
@@ -154,6 +168,7 @@ watch(
 watch(
   () => car.value.make,
   async () => {
+    if (!car.value) return;
     models.value = await carOptions.models(car.value.year, car.value.make);
     if (models.value.length === 1) {
       car.value.model = models.value[0];
@@ -168,6 +183,7 @@ watch(
 watch(
   () => car.value.model,
   async () => {
+    if (!car.value) return;
     styles.value = await carOptions.styles(
       car.value.year,
       car.value.make,
@@ -182,6 +198,14 @@ watch(
   },
   { immediate: true }
 );
+watch(
+  car,
+  () => {
+    if (!car.value) return;
+    saveCars();
+  },
+  { deep: true }
+);
 
 const options: Ref<any> = ref({});
 const series: Ref<any[]> = ref([]);
@@ -192,9 +216,11 @@ const setChart = () => {
       id: "cars",
     },
     carCount: cars.length,
-    name: car.value.make,
+    name: "Cars",
     xaxis: {
-      categories: cars.map((car) => car.make + " " + car.model),
+      categories: cars.map(
+        (car) => car.year + " " + car.make + " " + car.model
+      ),
     },
     maintainAspectRatio: false,
   };
@@ -217,34 +243,62 @@ const loadCars = () => {
   if (carsJson) {
     cars.push(...JSON.parse(carsJson).map((car: any) => Car.deserialize(car)));
   }
+  if (cars.length > 0) {
+    car.value = cars[0];
+  } else {
+    car.value = new Car(
+      2018,
+      "Subaru",
+      "Forester",
+      "SUV",
+      28000,
+      32000,
+      "Nice green car at the dealership in Spokane"
+    );
+    cars.push(car.value);
+    saveCars();
+  }
 };
 
 const saveCars = () => {
-  console.log("Saving Cars");
   localStorage.setItem("cars", JSON.stringify(cars));
-};
-
-const save = () => {
-  console.log("Saving");
-  console.log(cars);
-  cars.push(Car.deserialize(car.value));
-  saveCars();
   setChart();
 };
 
-const load = (index: number) => {
-  console.log("Loading");
-  car.value = Car.deserialize(cars[index]);
+const select = (index: number) => {
+  //car.value = Car.deserialize(cars[index]);
+  car.value = cars[index];
 };
 const remove = (index: number) => {
   // Prompt for confirmation
   if (!confirm("Are you sure you want to delete this car?")) {
     return;
   }
-  console.log("Loading");
   cars.splice(index, 1);
+  if (cars.length > 0) {
+    car.value = cars[index - 1];
+  } else {
+    addCar();
+  }
   saveCars();
-  setChart();
+};
+
+const copy = (index: number) => {
+  console.log("Copying Car: " + index);
+  const newCar = Car.deserialize(cars[index]);
+  newCar.details = "Copy of " + car.value.details;
+  cars.push(newCar);
+  car.value = newCar;
+  saveCars();
+};
+
+const addCar = () => {
+  car.value = new Car(2020, "", "", "", 0, 0, "");
+  cars.push(car.value);
+};
+
+const variant = (aCar: Car) => {
+  return aCar == car.value ? "tonal" : "elevated";
 };
 </script>
 

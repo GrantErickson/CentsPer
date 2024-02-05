@@ -28,7 +28,6 @@ export class CarOptions {
     const unique: string[] = [
       ...new Set<string>(data.map((item: string[]) => item[1] as string)),
     ];
-    console.log(unique);
     return unique;
   }
 
@@ -52,6 +51,7 @@ export class CarOptions {
     if (models.length === 1) {
       return JSON.parse(models[0]) as string[];
     }
-    return ["Standard"];
+    if (year && make && model) return ["Standard"];
+    return [];
   }
 }
