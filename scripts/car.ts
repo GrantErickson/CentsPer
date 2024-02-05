@@ -7,6 +7,7 @@ export class Car {
     public price: number,
     public miles: number,
     public details: string,
+    public color: string,
     public hotness: number = 10
   ) {}
 
@@ -21,6 +22,7 @@ export class Car {
       newCar.price,
       newCar.miles,
       newCar.details,
+      newCar.color,
       newCar.hotness
     );
     return car;
@@ -68,13 +70,47 @@ export class Car {
       case "Pickup":
         return "mdi-car-pickup";
       case "SUV":
-        return "mdi-car-sports-utility-vehicle";
+        return "mdi-car-estate";
       case "Hatchback":
         return "mdi-car-hatchback";
       case "Coupe":
         return "mdi-car-sports";
       default:
         return "mdi-car";
+    }
+  }
+
+  public get uiColor() {
+    if (!this.color) return "gray";
+    switch (this.color.toLowerCase()) {
+      case "red":
+        return "red-darken-2";
+      case "blue":
+        return "blue";
+      case "green":
+        return "green";
+      case "black":
+        return "black";
+      case "white":
+        return "gray";
+      case "silver":
+        return "silver";
+      case "gray":
+        return "gray";
+      case "gold":
+        return "gold";
+      case "brown":
+        return "brown";
+      case "yellow":
+        return "yellow";
+      case "orange":
+        return "orange";
+      case "purple":
+        return "purple";
+      case "pink":
+        return "pink";
+      default:
+        return this.color.toLowerCase();
     }
   }
 }

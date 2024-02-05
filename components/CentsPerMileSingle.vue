@@ -29,8 +29,11 @@
         </v-row>
 
         <v-row>
-          <v-col cols="12" class="v-col-md-9 v-col-lg-10">
+          <v-col cols="12" class="v-col-md-6 v-col-lg-8">
             <v-text-field label="Details" v-model="car.details" />
+          </v-col>
+          <v-col cols="12" class="v-col-md-3 v-col-lg-2">
+            <v-combobox label="Color" v-model="car.color" :items="colors" />
           </v-col>
           <v-col cols="12" class="v-col-md-3 v-col-lg-2">
             <v-select
@@ -81,7 +84,7 @@
             elevation="5"
           >
             <template v-slot:prepend>
-              <v-avatar color="blue-darken-2">
+              <v-avatar :color="aCar.uiColor">
                 <v-icon :icon="aCar.carIcon"></v-icon>
               </v-avatar>
             </template>
@@ -92,7 +95,6 @@
             </template>
             <v-card-text>
               {{ aCar.details }}
-              {{ aCar.carIcon }}
             </v-card-text>
             <v-card-actions>
               <v-icon
@@ -143,12 +145,38 @@ import VueApexCharts from "vue3-apexcharts";
 
 const carOptions = new CarOptions();
 
-const car: Ref<Car> = ref(new Car(0, "", "", "", 0, 0, ""));
+const car: Ref<Car> = ref(new Car(0, "", "", "", 0, 0, "", ""));
 const cars = reactive(new Array<Car>());
 const maxMiles = ref(200000);
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
+const colors: Ref<string[]> = ref(
+  [
+    "",
+    "Red",
+    "Blue",
+    "Light-Blue",
+    "Cyan",
+    "Teal",
+    "Green",
+    "Light-Green",
+    "Lime",
+    "Black",
+    "White",
+    "Silver",
+    "Gray",
+    "Blue-Gray",
+    "Brown",
+    "Yellow",
+    "Amber",
+    "Orange",
+    "Deep-Orange",
+    "Purple",
+    "Pink",
+    "Indigo",
+  ].sort((a, b) => a.localeCompare(b))
+);
 
 // Watchers to update the makes, models, and styles when the year, make, or model changes
 watch(
@@ -253,7 +281,8 @@ const loadCars = () => {
       "SUV",
       28000,
       32000,
-      "Nice green car at the dealership in Spokane"
+      "Nice green car at the dealership in Spokane",
+      "Green"
     );
     cars.push(car.value);
     saveCars();
@@ -293,7 +322,7 @@ const copy = (index: number) => {
 };
 
 const addCar = () => {
-  car.value = new Car(2020, "", "", "", 0, 0, "");
+  car.value = new Car(2020, "", "", "", 0, 0, "", "");
   cars.push(car.value);
 };
 
