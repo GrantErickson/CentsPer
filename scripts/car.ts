@@ -1,8 +1,9 @@
 export class Car {
   constructor(
+    public year: number,
     public make: string,
     public model: string,
-    public year: number,
+    public style: string,
     public price: number,
     public miles: number,
     public location: string,
@@ -13,9 +14,10 @@ export class Car {
 
   public static deserialize(newCar: any) {
     let car = new Car(
+      newCar.year,
       newCar.make,
       newCar.model,
-      newCar.year,
+      newCar.style,
       newCar.price,
       newCar.miles,
       newCar.location,

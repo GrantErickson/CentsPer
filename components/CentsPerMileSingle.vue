@@ -2,6 +2,7 @@
   <v-card elevation="3">
     <v-card-title>
       <div class="text-h4">CentsPer Mile</div>
+      <v-btn @click="getStuff">Get Stuff</v-btn>
     </v-card-title>
     <v-card-subtitle>
       <div>Apples to apples on used cars</div>
@@ -10,16 +11,16 @@
     <v-card-text>
       <v-row>
         <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-text-field label="Year" v-model="car.year"></v-text-field>
+          <v-select label="Year" v-model="car.year" :items="carOptions.years" />
         </v-col>
         <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-text-field label="Make" v-model="car.make"></v-text-field>
+          <v-select label="Make" v-model="car.make" :items="makes" />
         </v-col>
         <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-text-field label="Model" v-model="car.model"></v-text-field>
+          <v-select label="Model" v-model="car.model" :items="models" />
         </v-col>
         <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-          <v-text-field label="Location" v-model="car.location"></v-text-field>
+          <v-select label="Style" v-model="car.style" :items="styles" />
         </v-col>
       </v-row>
 
@@ -124,14 +125,67 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from "vue";
 import { Car } from "~/scripts/car";
+import { CarOptions } from "~/scripts/carOptions";
 import VueApexCharts from "vue3-apexcharts";
 
-const car = ref(new Car("Unknown", "Unknown", 2020, 10000, 100000, "A Friend"));
+const carOptions = new CarOptions();
+
+const car: Ref<Car> = ref(
+  new Car(2018, "Subaru", "Forester", "SUV", 28000, 32000, "A Friend")
+);
 const cars = reactive(new Array<Car>());
 const maxMiles = ref(200000);
+const makes: Ref<string[]> = ref([]);
+const models: Ref<string[]> = ref([]);
+const styles: Ref<string[]> = ref([]);
 
-const options = ref({});
-const series = ref();
+// Watchers to update the makes, models, and styles when the year, make, or model changes
+watch(
+  () => car.value.year,
+  async () => {
+    makes.value = await carOptions.makes(car.value.year);
+    if (makes.value.indexOf(car.value.make) == -1) {
+      car.value.make = "";
+      car.value.model = "";
+      car.value.style = "";
+    }
+  },
+  { immediate: true }
+);
+watch(
+  () => car.value.make,
+  async () => {
+    models.value = await carOptions.models(car.value.year, car.value.make);
+    if (models.value.length === 1) {
+      car.value.model = models.value[0];
+    }
+    if (models.value.indexOf(car.value.model) == -1) {
+      car.value.model = "";
+      car.value.style = "";
+    }
+  },
+  { immediate: true }
+);
+watch(
+  () => car.value.model,
+  async () => {
+    styles.value = await carOptions.styles(
+      car.value.year,
+      car.value.make,
+      car.value.model
+    );
+    if (styles.value.length === 1) {
+      car.value.style = styles.value[0];
+    }
+    if (styles.value.indexOf(car.value.style) == -1) {
+      car.value.style = "";
+    }
+  },
+  { immediate: true }
+);
+
+const options: Ref<any> = ref({});
+const series: Ref<any[]> = ref([]);
 
 const setChart = () => {
   options.value = {
@@ -192,6 +246,10 @@ const remove = (index: number) => {
   cars.splice(index, 1);
   saveCars();
   setChart();
+};
+
+const getStuff = async () => {
+  console.log(await carOptions.makes(2020));
 };
 </script>
 
