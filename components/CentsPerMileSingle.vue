@@ -8,6 +8,8 @@
       <div>{{ maxMiles }} miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
+      <div class="text-h5 mb-3">Selected Car</div>
+
       <div v-if="car != null">
         <v-row>
           <v-col cols="12" class="v-col-sm-6 v-col-md-3">
@@ -66,6 +68,7 @@
         </v-row>
       </div>
 
+      <div class="text-h5 mb-3">My Cars</div>
       <v-row>
         <v-col
           v-for="(aCar, index) in cars"
