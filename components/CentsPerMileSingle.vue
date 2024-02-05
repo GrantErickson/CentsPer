@@ -89,7 +89,7 @@
               </v-avatar>
             </template>
             <template v-slot:append>
-              <v-avatar size="24" style="font-size: 2em">
+              <v-avatar size="24" style="font-size: 2em" variant="text">
                 {{ aCar.hotnessIcon }}
               </v-avatar>
             </template>
