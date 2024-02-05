@@ -2,7 +2,6 @@
   <v-card elevation="3">
     <v-card-title>
       <div class="text-h4">CentsPer Mile</div>
-      <v-btn @click="getStuff">Get Stuff</v-btn>
     </v-card-title>
     <v-card-subtitle>
       <div>Apples to apples on used cars</div>
@@ -246,10 +245,6 @@ const remove = (index: number) => {
   cars.splice(index, 1);
   saveCars();
   setChart();
-};
-
-const getStuff = async () => {
-  console.log(await carOptions.makes(2020));
 };
 </script>
 
