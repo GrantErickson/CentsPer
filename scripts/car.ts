@@ -110,7 +110,7 @@ export class Car {
       case "pink":
         return "pink";
       default:
-        return this.color.toLowerCase();
+        return this.color.toLowerCase() + "-darken-2";
     }
   }
 }

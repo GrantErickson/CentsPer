@@ -35,7 +35,11 @@
             <v-text-field label="Details" v-model="car.details" />
           </v-col>
           <v-col cols="12" class="v-col-md-3 v-col-lg-2">
-            <v-combobox label="Color" v-model="car.color" :items="colors" />
+            <v-combobox
+              label="Color"
+              v-model="car.color"
+              :items="carOptions.colors"
+            />
           </v-col>
           <v-col cols="12" class="v-col-md-3 v-col-lg-2">
             <v-select
@@ -154,32 +158,6 @@ const maxMiles = ref(200000);
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
-const colors: Ref<string[]> = ref(
-  [
-    "",
-    "Red",
-    "Blue",
-    "Light-Blue",
-    "Cyan",
-    "Teal",
-    "Green",
-    "Light-Green",
-    "Lime",
-    "Black",
-    "White",
-    "Silver",
-    "Gray",
-    "Blue-Gray",
-    "Brown",
-    "Yellow",
-    "Amber",
-    "Orange",
-    "Deep-Orange",
-    "Purple",
-    "Pink",
-    "Indigo",
-  ].sort((a, b) => a.localeCompare(b))
-);
 
 // Watchers to update the makes, models, and styles when the year, make, or model changes
 watch(

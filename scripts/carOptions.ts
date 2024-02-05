@@ -11,7 +11,33 @@ export class CarOptions {
     2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025,
   ].sort((a, b) => b - a);
 
+  public readonly colors: string[] = [
+    "",
+    "Red",
+    "Blue",
+    "Light-Blue",
+    "Cyan",
+    "Teal",
+    "Green",
+    "Light-Green",
+    "Lime",
+    "Black",
+    "White",
+    "Silver",
+    "Gray",
+    "Blue-Gray",
+    "Brown",
+    "Yellow",
+    "Amber",
+    "Orange",
+    "Deep-Orange",
+    "Purple",
+    "Pink",
+    "Indigo",
+  ].sort((a, b) => a.localeCompare(b));
+
   public async getCarData(year: number): Promise<string[][]> {
+    if (year < 1992) return [];
     if (CarOptions.carData.has(year)) {
       return CarOptions.carData.get(year)!;
     }
