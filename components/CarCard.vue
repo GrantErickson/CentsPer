@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="mx-auto"
-    :title="car.centsPerMile() + '¢/mile'"
+    :title="car.centsPerMile() + '¢ per mile'"
     :subtitle="car.year + ' ' + car.make + ' ' + car.model"
     tonal
     elevation="5"
@@ -17,21 +17,22 @@
       </v-avatar>
     </template>
     <v-card-text>
-      {{ "with " + car.miles + " miles for $" + car.price }}
+      with {{ Format.number(car.miles) }} miles for
+      {{ Format.currency(car.price) }}
     </v-card-text>
     <v-table density="compact">
       <thead>
         <tr>
           <th>Expected Miles</th>
-          <th>Lifetime</th>
-          <th>Total Cost</th>
+          <th class="text-center">Lifetime</th>
+          <th class="text-right">Total Cost</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ carOptions.maxMiles - car.miles }}</td>
-          <td>{{ expectedYears }} years</td>
-          <td>${{ totalCost }}</td>
+          <td>{{ Format.number(carOptions.maxMiles - car.miles) }}</td>
+          <td class="text-center">{{ expectedYears }} years</td>
+          <td class="text-right">{{ Format.currency(totalCost) }}</td>
         </tr>
       </tbody>
     </v-table>
@@ -50,6 +51,7 @@
 <script setup lang="ts">
 import { Car } from "~/scripts/car";
 import { CarOptions } from "~/scripts/carOptions";
+import { Format } from "~/scripts/format";
 
 const props = defineProps({
   car: { type: Car, required: true },
