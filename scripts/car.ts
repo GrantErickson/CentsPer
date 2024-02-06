@@ -33,7 +33,7 @@ export class Car {
   }
 
   public centsPerMile(lifetimeMiles: number = 200000): number {
-    let result = this.price / (lifetimeMiles - this.miles);
+    let result = (this.price / (lifetimeMiles - this.miles)) * 100;
     return Math.round(result * 100) / 100;
   }
 
@@ -138,7 +138,7 @@ export class Car {
 
     // loop until maxMiles is reached with milesPerYear each year
     let year = 0;
-    let milesSum = this.miles;
+    let milesSum = Number(this.miles);
     let centsPerMile = this.centsPerMile(maxMiles);
     let hundredThousand: boolean = this.miles > 100000;
     const hundredThousandHit = 0.4;
@@ -151,7 +151,8 @@ export class Car {
     do {
       year++;
       milesSum += milesPerYear;
-      vehicleCost.data.push(centsPerMile * milesPerYear);
+      let yearlyPurchase = Math.round((centsPerMile / 100) * milesPerYear);
+      vehicleCost.data.push(yearlyPurchase);
       let repairFactor = 0;
       if (milesSum <= 30000) repairFactor += 0.05;
       else if (milesSum <= 60000) repairFactor += 0.15;

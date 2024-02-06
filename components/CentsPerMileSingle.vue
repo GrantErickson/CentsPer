@@ -85,6 +85,8 @@
             :car="aCar"
             :carOptions="carOptions"
             @click="select(index)"
+            @copy="copy(index)"
+            @delete="remove(index)"
           />
         </v-col>
         <v-col cols="12" class="v-col-md-6 v-col-lg-4">
@@ -272,7 +274,6 @@ const remove = (index: number) => {
   }
   saveCars();
 };
-
 const copy = (index: number) => {
   console.log("Copying Car: " + index);
   const newCar = Car.deserialize(cars[index]);
