@@ -176,7 +176,6 @@ export class Car {
       insurance.data.push(insuranceYearly);
     } while (milesSum < maxMiles);
 
-    console.log(result);
     return result;
   }
 }

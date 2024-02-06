@@ -8,70 +8,6 @@
       <div>{{ carOptions.maxMiles }} miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
-      <div class="text-h5 mb-3">Selected Car</div>
-
-      <div v-if="car != null">
-        <v-row>
-          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-            <v-autocomplete
-              label="Year"
-              v-model="car.year"
-              :items="carOptions.years"
-            />
-          </v-col>
-          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-            <v-autocomplete label="Make" v-model="car.make" :items="makes" />
-          </v-col>
-          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-            <v-autocomplete label="Model" v-model="car.model" :items="models" />
-          </v-col>
-          <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-            <v-autocomplete label="Style" v-model="car.style" :items="styles" />
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12" class="v-col-md-6 v-col-lg-8">
-            <v-text-field label="Details" v-model="car.details" />
-          </v-col>
-          <v-col cols="12" class="v-col-md-3 v-col-lg-2">
-            <v-combobox
-              label="Color"
-              v-model="car.color"
-              :items="carOptions.colors"
-            />
-          </v-col>
-          <v-col cols="12" class="v-col-md-3 v-col-lg-2">
-            <v-select
-              label="Hotness"
-              v-model="car.hotness"
-              :items="[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]"
-            />
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12" class="v-col-md-6 v-col-lg-4">
-            <v-text-field
-              label="Price"
-              v-model="car.price"
-              prepend-inner-icon="mdi-currency-usd"
-              type="number"
-            />
-          </v-col>
-          <v-col cols="12" class="v-col-md-6 v-col-lg-4">
-            <v-text-field label="Miles" v-model="car.miles" type="number" />
-          </v-col>
-          <v-col cols="12" class="v-col-md-6 v-col-lg-4">
-            <v-text-field
-              label="Cents per Mile"
-              :model-value="car.centsPerMile() + ' ¢/mile'"
-              readonly
-            />
-          </v-col>
-        </v-row>
-      </div>
-
       <div class="text-h5 mb-3">My Cars</div>
       <v-progress-circular indeterminate v-if="!isLoaded"></v-progress-circular>
       <v-row v-if="isLoaded">
@@ -84,13 +20,19 @@
           <CarCard
             :car="aCar"
             :carOptions="carOptions"
-            @click="select(index)"
-            @copy="copy(index)"
-            @delete="remove(index)"
+            @click="showCarEdit(index)"
+            @copy="copyCar(index)"
+            @delete="removeCar(index)"
           />
         </v-col>
         <v-col cols="12" class="v-col-md-6 v-col-lg-4">
-          <v-card class="mx-auto" title="Add Car" @click="addCar" color="green">
+          <v-card
+            class="mx-auto"
+            title="Add Car"
+            variant="tonal"
+            @click="addCar"
+            color="green"
+          >
             <template v-slot:prepend>
               <v-avatar color="blue-darken-2">
                 <v-icon icon="mdi-car"></v-icon>
@@ -117,10 +59,31 @@
       </v-row>
     </v-card-actions>
   </v-card>
+
+  <v-dialog v-model="showEditor" v-if="car != null">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" text="Open Dialog"> </v-btn>
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card title="Edit Car">
+        <v-card-text>
+          <CarEdit :car="car" :carOptions="carOptions" />
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn text="Save" color="green" @click="saveCarEdit"></v-btn>
+          <v-btn text="Cancel" color="red" @click="cancelCarEdit"></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, type Ref } from "vue";
 import { Car } from "~/scripts/car";
 import { CarOptions } from "~/scripts/carOptions";
 import VueApexCharts from "vue3-apexcharts";
@@ -128,11 +91,13 @@ import VueApexCharts from "vue3-apexcharts";
 const isLoaded = ref(false);
 const carOptions = reactive(new CarOptions());
 
-const car: Ref<Car> = ref(new Car(0, "", "", "", 0, 0, "", ""));
+const car: Ref<Car | null> = ref(null);
+const selectedCar: Ref<Car | null> = ref(null); // This is so we know the original to replace
 const cars = reactive(new Array<Car>());
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
+const showEditor = ref(false);
 
 // TODO: This should be loaded a better way to make sure it awaits.
 CarOptions.loadReliabilityData().then(() => {
@@ -140,63 +105,6 @@ CarOptions.loadReliabilityData().then(() => {
   //const instance = getCurrentInstance();
   //instance!.proxy!.$forceUpdate();
 });
-
-// Watchers to update the makes, models, and styles when the year, make, or model changes
-watch(
-  () => car.value.year,
-  async () => {
-    if (!car.value) return;
-
-    makes.value = await carOptions.makes(car.value.year);
-    if (makes.value.indexOf(car.value.make) == -1) {
-      car.value.make = "";
-      car.value.model = "";
-      car.value.style = "";
-    }
-  },
-  { immediate: true }
-);
-watch(
-  () => car.value.make,
-  async () => {
-    if (!car.value) return;
-    models.value = await carOptions.models(car.value.year, car.value.make);
-    if (models.value.length === 1) {
-      car.value.model = models.value[0];
-    }
-    if (models.value.indexOf(car.value.model) == -1) {
-      car.value.model = "";
-      car.value.style = "";
-    }
-  },
-  { immediate: true }
-);
-watch(
-  () => car.value.model,
-  async () => {
-    if (!car.value) return;
-    styles.value = await carOptions.styles(
-      car.value.year,
-      car.value.make,
-      car.value.model
-    );
-    if (styles.value.length === 1) {
-      car.value.style = styles.value[0];
-    }
-    if (styles.value.indexOf(car.value.style) == -1) {
-      car.value.style = "";
-    }
-  },
-  { immediate: true }
-);
-watch(
-  car,
-  () => {
-    if (!car.value) return;
-    saveCars();
-  },
-  { deep: true }
-);
 
 const options: Ref<any> = ref({});
 const series: Ref<any[]> = ref([]);
@@ -257,11 +165,7 @@ const saveCars = () => {
   setChart();
 };
 
-const select = (index: number) => {
-  //car.value = Car.deserialize(cars[index]);
-  car.value = cars[index];
-};
-const remove = (index: number) => {
+const removeCar = (index: number) => {
   // Prompt for confirmation
   if (!confirm("Are you sure you want to delete this car?")) {
     return;
@@ -274,8 +178,7 @@ const remove = (index: number) => {
   }
   saveCars();
 };
-const copy = (index: number) => {
-  console.log("Copying Car: " + index);
+const copyCar = (index: number) => {
   const newCar = Car.deserialize(cars[index]);
   newCar.details = "Copy of " + car.value.details;
   cars.push(newCar);
@@ -288,8 +191,26 @@ const addCar = () => {
   cars.push(car.value);
 };
 
-const variant = (aCar: Car) => {
-  return aCar == car.value ? "tonal" : "elevated";
+const showCarEdit = (index: number) => {
+  // Create a new car to edit so we can cancel easily.
+  selectedCar.value = cars[index];
+  car.value = Car.deserialize(selectedCar.value);
+  showEditor.value = true;
+};
+
+const saveCarEdit = () => {
+  showEditor.value = false;
+  // Replace the car with the edited one.
+  cars[cars.indexOf(selectedCar.value)] = car.value;
+  car.value = null;
+  selectedCar.value = null;
+  saveCars();
+};
+
+const cancelCarEdit = () => {
+  showEditor.value = false;
+  car.value = null;
+  selectedCar.value = null;
 };
 </script>
 
