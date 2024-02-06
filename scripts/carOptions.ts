@@ -2,6 +2,30 @@
 import { parse } from "csv-parse/sync";
 
 export class CarOptions {
+  private _maxMiles: number;
+  private _milesPerYear: number;
+
+  public constructor() {
+    this._maxMiles = Number(localStorage.getItem("maxMiles") || 200000);
+    this._milesPerYear = Number(localStorage.getItem("milesPerYear") || 15000);
+  }
+
+  public get maxMiles(): number {
+    return this._maxMiles;
+  }
+  public set maxMiles(value: number) {
+    this._maxMiles = value;
+    localStorage.setItem("maxMiles", this._maxMiles.toString());
+  }
+
+  public get milesPerYear(): number {
+    return this._milesPerYear;
+  }
+  public set milesPerYear(value: number) {
+    this._milesPerYear = value;
+    localStorage.setItem("milesPerYear", this._milesPerYear.toString());
+  }
+
   private static carData: Map<number, string[][]> = new Map();
 
   public readonly years: number[] = [

@@ -1,3 +1,7 @@
+import type { MenuHTMLAttributes } from "vue";
+import { CarOptions } from "./carOptions";
+import { Series } from "./series";
+
 export class Car {
   constructor(
     public year: number,
@@ -15,15 +19,15 @@ export class Car {
 
   public static deserialize(newCar: any) {
     let car = new Car(
-      newCar.year,
+      Number(newCar.year),
       newCar.make,
       newCar.model,
       newCar.style,
-      newCar.price,
-      newCar.miles,
+      Number(newCar.price),
+      Number(newCar.miles),
       newCar.details,
       newCar.color,
-      newCar.hotness
+      Number(newCar.hotness)
     );
     return car;
   }
@@ -112,5 +116,66 @@ export class Car {
       default:
         return this.color.toLowerCase() + "-darken-2";
     }
+  }
+
+  public carLifetimeGraph(
+    maxMiles: number = 200000,
+    milesPerYear: number = 15000
+  ): Series[] {
+    // Create ApexChart data
+    // For each year of the car's lifetime until maxMiles
+    let result: Series[] = [];
+    const vehicleCost = new Series("Purchase");
+    result.push(vehicleCost);
+    const repairs = new Series("Repairs");
+    result.push(repairs);
+    const maintenance = new Series("Maintenance");
+    result.push(maintenance);
+    const fuel = new Series("Fuel");
+    //result.push(fuel);
+    const insurance = new Series("Insurance");
+    //result.push(insurance);
+
+    // loop until maxMiles is reached with milesPerYear each year
+    let year = 0;
+    let milesSum = this.miles;
+    let centsPerMile = this.centsPerMile(maxMiles);
+    let hundredThousand: boolean = this.miles > 100000;
+    const hundredThousandHit = 0.4;
+
+    const repairYearly = 1000;
+    const maintenanceYearly = 200;
+    const insuranceYearly = 500;
+    const fuelCostPerMile = 0.11;
+
+    do {
+      year++;
+      milesSum += milesPerYear;
+      vehicleCost.data.push(centsPerMile * milesPerYear);
+      let repairFactor = 0;
+      if (milesSum <= 30000) repairFactor += 0.05;
+      else if (milesSum <= 60000) repairFactor += 0.15;
+      else if (milesSum <= 80000) repairFactor += 0.25;
+      else if (milesSum <= 100000) repairFactor += 0.3;
+      else if (milesSum <= 120000) repairFactor += 0.4;
+      else if (milesSum <= 140000) repairFactor += 0.5;
+      else if (milesSum <= 160000) repairFactor += 0.6;
+      else if (milesSum <= 180000) repairFactor += 0.7;
+      else if (milesSum <= 200000) repairFactor += 0.8;
+      else if (milesSum <= 220000) repairFactor += 0.8;
+      else repairFactor += 1.0;
+
+      if (milesSum > 100000 && !hundredThousand) {
+        repairFactor += hundredThousandHit;
+        hundredThousand = true;
+      }
+      repairs.data.push(repairFactor * repairYearly);
+      maintenance.data.push(maintenanceYearly);
+      fuel.data.push(fuelCostPerMile * milesPerYear);
+      insurance.data.push(insuranceYearly);
+    } while (milesSum < maxMiles);
+
+    console.log(result);
+    return result;
   }
 }

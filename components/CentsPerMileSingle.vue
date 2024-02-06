@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-subtitle>
       <div>Apples to apples on used cars</div>
-      <div>{{ maxMiles }} miles is used as a car's lifetime</div>
+      <div>{{ carOptions.maxMiles }} miles is used as a car's lifetime</div>
     </v-card-subtitle>
     <v-card-text>
       <div class="text-h5 mb-3">Selected Car</div>
@@ -80,39 +80,11 @@
           cols="12"
           class="v-col-md-6 v-col-lg-4"
         >
-          <v-card
-            class="mx-auto"
-            :title="aCar.centsPerMile() + '¢/mile'"
-            :subtitle="aCar.year + ' ' + aCar.make + ' ' + aCar.model"
+          <CarCard
+            :car="aCar"
+            :carOptions="carOptions"
             @click="select(index)"
-            :color="aCar == car ? 'blue' : ''"
-            :variant="variant(aCar)"
-            tonal
-            elevation="5"
-          >
-            <template v-slot:prepend>
-              <v-avatar :color="aCar.uiColor">
-                <v-icon :icon="aCar.carIcon"></v-icon>
-              </v-avatar>
-            </template>
-            <template v-slot:append>
-              <v-avatar size="24" style="font-size: 2em" variant="text">
-                {{ aCar.hotnessIcon }}
-              </v-avatar>
-            </template>
-            <v-card-text>
-              {{ aCar.details }}
-            </v-card-text>
-            <v-card-actions>
-              <v-icon
-                @click="copy(index)"
-                color="blue"
-                icon="mdi-content-copy"
-              />
-              <v-spacer></v-spacer>
-              <v-icon @click="remove(index)" color="red" icon="mdi-delete" />
-            </v-card-actions>
-          </v-card>
+          />
         </v-col>
         <v-col cols="12" class="v-col-md-6 v-col-lg-4">
           <v-card class="mx-auto" title="Add Car" @click="addCar" color="green">
@@ -144,17 +116,16 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from "vue";
 import { Car } from "~/scripts/car";
 import { CarOptions } from "~/scripts/carOptions";
 import VueApexCharts from "vue3-apexcharts";
 
-const carOptions = new CarOptions();
+const carOptions = reactive(new CarOptions());
 
 const car: Ref<Car> = ref(new Car(0, "", "", "", 0, 0, "", ""));
 const cars = reactive(new Array<Car>());
-const maxMiles = ref(200000);
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
@@ -312,11 +283,4 @@ const variant = (aCar: Car) => {
 };
 </script>
 
-<style scoped>
-.math {
-  display: flex;
-  align-items: center;
-  font-size: 1.4em;
-  margin-top: 1.2em;
-}
-</style>
+<style scoped></style>
