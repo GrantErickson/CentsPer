@@ -81,6 +81,9 @@ const totalCost = ref(0);
 const setChart = () => {
   options.value = {
     chart: {
+      toolbar: {
+        show: false,
+      },
       type: "area",
       stacked: true,
       height: 200,
