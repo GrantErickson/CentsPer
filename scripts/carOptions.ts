@@ -1,7 +1,12 @@
 //import { Buffer } from "buffer";
 import { parse } from "csv-parse/sync";
+import { ReliabilityResult, Reliability } from "./reliability";
+import { Format } from "./format";
 
 export class CarOptions {
+  private static carData: Map<number, string[][]> = new Map();
+  private static reliabilityData: Reliability[] = [];
+
   private _maxMiles: number;
   private _milesPerYear: number;
 
@@ -25,8 +30,6 @@ export class CarOptions {
     this._milesPerYear = value;
     localStorage.setItem("milesPerYear", this._milesPerYear.toString());
   }
-
-  private static carData: Map<number, string[][]> = new Map();
 
   public readonly years: number[] = [
     // years 1992-2025
@@ -59,6 +62,31 @@ export class CarOptions {
     "Pink",
     "Indigo",
   ].sort((a, b) => a.localeCompare(b));
+
+  public static async loadReliabilityData(): Promise<void> {
+    CarOptions.reliabilityData = [];
+    const response = await fetch(`/reliability.csv`);
+    const csv = await response.text();
+    var data = parse(csv);
+    data.splice(0, 1); // remove the header row
+    for (let row of data) {
+      var reliability = new Reliability(row[0], Number(row[1]), Number(row[2]));
+      CarOptions.reliabilityData.push(reliability);
+    }
+  }
+
+  public getReliability(make: string) {
+    var reliability = CarOptions.reliabilityData.find(
+      (item) => item.make.toLowerCase() === make.toLocaleLowerCase()
+    );
+    if (reliability)
+      return new ReliabilityResult(
+        make,
+        Format.number(reliability.rating) + "/100",
+        Format.currency(reliability.perYearCost)
+      );
+    return new ReliabilityResult(make, "Unknown", "Unknown");
+  }
 
   public async getCarData(year: number): Promise<string[][]> {
     if (year < 1992) return [];

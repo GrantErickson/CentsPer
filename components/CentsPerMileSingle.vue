@@ -73,7 +73,8 @@
       </div>
 
       <div class="text-h5 mb-3">My Cars</div>
-      <v-row>
+      <v-progress-circular indeterminate v-if="!isLoaded"></v-progress-circular>
+      <v-row v-if="isLoaded">
         <v-col
           v-for="(aCar, index) in cars"
           :key="aCar.key"
@@ -122,6 +123,7 @@ import { Car } from "~/scripts/car";
 import { CarOptions } from "~/scripts/carOptions";
 import VueApexCharts from "vue3-apexcharts";
 
+const isLoaded = ref(false);
 const carOptions = reactive(new CarOptions());
 
 const car: Ref<Car> = ref(new Car(0, "", "", "", 0, 0, "", ""));
@@ -129,6 +131,13 @@ const cars = reactive(new Array<Car>());
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
+
+// TODO: This should be loaded a better way to make sure it awaits.
+CarOptions.loadReliabilityData().then(() => {
+  isLoaded.value = true;
+  //const instance = getCurrentInstance();
+  //instance!.proxy!.$forceUpdate();
+});
 
 // Watchers to update the makes, models, and styles when the year, make, or model changes
 watch(

@@ -39,6 +39,22 @@
     <v-card-text>
       {{ car.details }}
       <apexchart height="200" :options="options" :series="series" />
+      <v-table density="compact">
+        <thead>
+          <tr>
+            <th>{{ car.make }} Ranking</th>
+            <th class="text-right">{{ car.make }} Yearly Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ carOptions.getReliability(car.make).rating }}</td>
+            <td class="text-right">
+              {{ carOptions.getReliability(car.make).perYearCost }}
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
     </v-card-text>
     <v-card-actions>
       <v-icon @click="$emit('copy')" color="blue" icon="mdi-content-copy" />
