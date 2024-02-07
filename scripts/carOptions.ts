@@ -10,7 +10,7 @@ export class CarOptions {
 
   private _maxMiles: number;
   private _milesPerYear: number;
-  public showGraphCumulative: boolean = true;
+  public _showGraphCumulative: boolean;
 
   public isLoading: boolean = true;
 
@@ -18,13 +18,15 @@ export class CarOptions {
     console.log("Creating carOptions");
     this._maxMiles = Number(localStorage.getItem("maxMiles") || 200000);
     this._milesPerYear = Number(localStorage.getItem("milesPerYear") || 15000);
+    this._showGraphCumulative =
+      localStorage.getItem("showGraphCumulative") === "true";
   }
 
   public get maxMiles(): number {
     return this._maxMiles;
   }
   public set maxMiles(value: number) {
-    this._maxMiles = value;
+    this._maxMiles = Number(value);
     localStorage.setItem("maxMiles", this._maxMiles.toString());
   }
 
@@ -32,8 +34,19 @@ export class CarOptions {
     return this._milesPerYear;
   }
   public set milesPerYear(value: number) {
-    this._milesPerYear = value;
+    this._milesPerYear = Number(value);
     localStorage.setItem("milesPerYear", this._milesPerYear.toString());
+  }
+
+  public get showGraphCumulative(): number {
+    return this._showGraphCumulative;
+  }
+  public set showGraphCumulative(value: number) {
+    this._showGraphCumulative = value;
+    localStorage.setItem(
+      "showGraphCumulative",
+      this._showGraphCumulative.toString()
+    );
   }
 
   public readonly years: number[] = [

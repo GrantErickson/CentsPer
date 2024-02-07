@@ -76,10 +76,6 @@
   </v-card>
 
   <v-dialog v-model="showEditor" v-if="car != null">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Open Dialog"> </v-btn>
-    </template>
-
     <template v-slot:default="{ isActive }">
       <v-card title="Edit Car">
         <v-card-text>
@@ -89,8 +85,18 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn text="Save" color="green" @click="saveCarEdit"></v-btn>
-          <v-btn text="Cancel" color="red" @click="cancelCarEdit"></v-btn>
+          <v-btn
+            elevation="4"
+            text="Save"
+            color="green"
+            @click="saveCarEdit"
+          ></v-btn>
+          <v-btn
+            elevation="4"
+            text="Cancel"
+            color="red"
+            @click="cancelCarEdit"
+          ></v-btn>
         </v-card-actions>
       </v-card>
     </template>
