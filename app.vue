@@ -71,9 +71,9 @@
     </v-dialog>
 
 
-      <v-dialog v-model="showHelp" width="500">
+      <v-dialog v-model="showHelp" max-width="600">
       <template v-slot:default="{  }">
-        <v-card title="Help">
+        <v-card title="How to use Cents per Mile">
           <v-card-text>
           <b>
             Cents per Mile is a simple way to compare cars to determine the best value. 
@@ -117,13 +117,20 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"></link>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { carOptions } from './scripts/carOptions';
 import { Format } from './scripts/format';
 
 const showSettings = ref(false);
 const showHelp = ref(false);
 const refreshKey = ref(0);
+
+onMounted(() => {
+  if (!localStorage.getItem('firstTime')) {
+    localStorage.setItem('firstTime', 'false');
+    showHelp.value = true;
+  }
+});
 
 const clickGear = () => {
   showSettings.value = true;
