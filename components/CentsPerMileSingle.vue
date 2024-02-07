@@ -36,6 +36,7 @@
           <CarCard
             :car="aCar"
             :maxCentsPerMile="maxCentsPerMile"
+            :minCentsPerMile="minCentsPerMile"
             @click="showCarEdit(aCar)"
             @copy="copyCar(aCar)"
             @delete="removeCar(aCar)"
@@ -62,45 +63,32 @@
         </v-col>
       </v-row>
     </v-card-text>
-    <v-card-actions>
-      <v-row>
-        <v-col cols="12">
-          <apexchart
-            height="300"
-            type="bar"
-            :options="options"
-            :series="series"
-          />
-        </v-col>
-      </v-row>
-    </v-card-actions>
+    <v-card-actions> </v-card-actions>
   </v-card>
 
   <v-dialog v-model="showEditor" v-if="car != null">
-    <template v-slot:default="{ isActive }">
-      <v-card title="Edit Car">
-        <v-card-text>
-          <CarEdit :car="car" />
-        </v-card-text>
+    <v-card title="Edit Car">
+      <v-card-text>
+        <CarEdit :car="car" />
+      </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+      <v-card-actions>
+        <v-spacer></v-spacer>
 
-          <v-btn
-            elevation="4"
-            text="Save"
-            color="green"
-            @click="saveCarEdit"
-          ></v-btn>
-          <v-btn
-            elevation="4"
-            text="Cancel"
-            color="red"
-            @click="cancelCarEdit"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
+        <v-btn
+          elevation="4"
+          text="Save"
+          color="green"
+          @click="saveCarEdit"
+        ></v-btn>
+        <v-btn
+          elevation="4"
+          text="Cancel"
+          color="red"
+          @click="cancelCarEdit"
+        ></v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
 </template>
 
@@ -118,6 +106,7 @@ const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
 const showEditor = ref(false);
 const maxCentsPerMile = ref(0);
+const minCentsPerMile = ref(0);
 
 // TODO: This should be loaded a better way to make sure it awaits.
 await carOptions.loadReliabilityData();
@@ -125,34 +114,14 @@ await carOptions.loadReliabilityData();
 const options: Ref<any> = ref({});
 const series: Ref<any[]> = ref([]);
 
-const setChart = () => {
-  options.value = {
-    chart: {
-      id: "cars",
-    },
-    carCount: cars.length,
-    name: "Cars",
-    xaxis: {
-      categories: cars.map(
-        (car) => car.year + " " + car.make + " " + car.model
-      ),
-    },
-    maintainAspectRatio: false,
-  };
-
-  series.value = [
-    {
-      name: "Cents per Mile",
-      data: cars.map((car) => car.centsPerMile()),
-    },
-  ];
-
+const refresh = () => {
   maxCentsPerMile.value = Math.max(...cars.map((car) => car.centsPerMile()));
+  minCentsPerMile.value = Math.min(...cars.map((car) => car.centsPerMile()));
 };
 
 onMounted(() => {
   loadCars();
-  setChart();
+  refresh();
 });
 
 const loadCars = () => {
@@ -181,7 +150,7 @@ const loadCars = () => {
 
 const saveCars = () => {
   localStorage.setItem("cars", JSON.stringify(cars));
-  setChart();
+  refresh();
 };
 
 const removeCar = (clickedCar: Car) => {
@@ -221,7 +190,7 @@ const showCarEdit = (clickedCar: Car) => {
 const saveCarEdit = () => {
   showEditor.value = false;
   // Replace the car with the edited one.
-  cars[cars.indexOf(selectedCar.value)] = car.value;
+  cars[cars.indexOf(selectedCar.value!)] = car.value!;
   car.value = null;
   selectedCar.value = null;
   saveCars();

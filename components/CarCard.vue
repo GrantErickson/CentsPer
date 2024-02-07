@@ -12,9 +12,18 @@
       </v-avatar>
     </template>
     <template v-slot:append>
-      <v-avatar size="24" style="font-size: 2em" variant="text">
-        {{ car.hotnessIcon }}
-      </v-avatar>
+      <v-tooltip text="Hotness">
+        <template v-slot:activator="{ props }">
+          <v-avatar
+            size="24"
+            style="font-size: 2em"
+            variant="text"
+            v-bind="props"
+          >
+            {{ car.hotnessIcon }}
+          </v-avatar>
+        </template>
+      </v-tooltip>
     </template>
 
     <v-progress-linear
@@ -58,14 +67,16 @@
       <v-table density="compact">
         <thead>
           <tr>
-            <th>CR {{ car.make }} Ranking</th>
-            <th class="text-right">CR {{ car.make }} Yearly Cost</th>
+            <th class="pl-0">CR {{ car.make }} Ranking</th>
+            <th class="pr-0 text-right">CR {{ car.make }} Yearly Cost</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{{ carOptions.getReliability(car.make).rating }}</td>
-            <td class="text-right">
+            <td class="pl-0">
+              {{ carOptions.getReliability(car.make).rating }}
+            </td>
+            <td class="pr-0 text-right">
               {{ carOptions.getReliability(car.make).perYearCost }}
             </td>
           </tr>
@@ -92,6 +103,7 @@ import { Format } from "~/scripts/format";
 const props = defineProps({
   car: { type: Car, required: true },
   maxCentsPerMile: { type: Number, required: true },
+  minCentsPerMile: { type: Number, required: true },
 });
 
 const emit = defineEmits({
@@ -106,7 +118,14 @@ const emit = defineEmits({
 const options: Ref<any> = ref({});
 const series: Ref<any[]> = ref([]);
 const ranking = computed(() => {
-  return Math.round((props.car.centsPerMile() / props.maxCentsPerMile) * 100);
+  return Math.round(
+    ((props.maxCentsPerMile -
+      props.car.centsPerMile() -
+      props.minCentsPerMile * 0.9 +
+      props.minCentsPerMile) /
+      (props.maxCentsPerMile - props.minCentsPerMile)) *
+      100
+  );
 });
 const rankingColor = computed(() => {
   if (ranking.value < 30) return "red";
