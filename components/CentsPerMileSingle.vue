@@ -47,7 +47,7 @@
     <v-card-actions> </v-card-actions>
   </v-card>
 
-  <v-dialog v-model="showEditor" v-if="car != null">
+  <v-dialog v-model="showEditor" v-if="car != null" max-width="1000">
     <v-card title="Edit Car">
       <v-card-text>
         <CarEdit :car="car" />
