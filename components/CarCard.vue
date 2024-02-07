@@ -2,7 +2,7 @@
   <v-card
     class="mx-auto"
     :title="car.centsPerMile() + '¢ per mile'"
-    :subtitle="car.year + ' ' + car.make + ' ' + car.model"
+    :subtitle="car.year + ' ' + car.make + ' ' + car.model + ' ' + car.style"
     tonal
     elevation="5"
   >
@@ -17,33 +17,43 @@
       </v-avatar>
     </template>
     <v-card-text>
-      with {{ Format.number(car.miles) }} miles for
-      {{ Format.currency(car.price) }}
-    </v-card-text>
-    <v-table density="compact">
-      <thead>
-        <tr>
-          <th>Expected Miles</th>
-          <th class="text-center">Lifetime</th>
-          <th class="text-right">Total Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ Format.number(carOptions.maxMiles - car.miles) }}</td>
-          <td class="text-center">{{ expectedYears }} years</td>
-          <td class="text-right">{{ Format.currency(totalCost) }}</td>
-        </tr>
-      </tbody>
-    </v-table>
-    <v-card-text>
-      {{ car.details }}
-      <apexchart height="200" :options="options" :series="series" />
+      <div>
+        with {{ Format.number(car.miles) }} miles for
+        {{ Format.currency(car.price) }}
+      </div>
+      <div class="mb-4">{{ car.details }}</div>
       <v-table density="compact">
         <thead>
           <tr>
-            <th>{{ car.make }} Ranking</th>
-            <th class="text-right">{{ car.make }} Yearly Cost</th>
+            <th class="pl-0">Expected Miles</th>
+            <th class="text-center">Lifetime</th>
+            <th class="pr-0 text-right">Yearly Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pl-0">
+              {{ Format.number(carOptions.maxMiles - car.miles) }}
+            </td>
+            <td class="text-center">{{ expectedYears }} years</td>
+            <td class="pr-0 text-right">{{ Format.currency(totalCost) }}</td>
+          </tr>
+        </tbody>
+      </v-table>
+
+      <hr class="mt-2 mb-3" />
+      <div class="text-subtitle-1 mt-3">
+        <div v-if="carOptions.showGraphCumulative">Cumulative Yearly Costs</div>
+        <div v-if="!carOptions.showGraphCumulative">Yearly Costs</div>
+      </div>
+      <apexchart height="200" :options="options" :series="series" />
+
+      <hr class="mt-2 mb-3" />
+      <v-table density="compact">
+        <thead>
+          <tr>
+            <th>CR {{ car.make }} Ranking</th>
+            <th class="text-right">CR {{ car.make }} Yearly Cost</th>
           </tr>
         </thead>
         <tbody>
@@ -124,16 +134,19 @@ const setChart = () => {
 
   expectedYears.value = series.value[0].data.length;
   if (carOptions.showGraphCumulative) {
-    totalCost.value = series.value.reduce(
-      (acc: number, val: any) => acc + val.data[val.data.length - 1],
-      0
-    );
+    totalCost.value =
+      series.value.reduce(
+        (acc: number, val: any) => acc + val.data[val.data.length - 1],
+        0
+      ) / expectedYears.value;
   } else {
-    totalCost.value = series.value.reduce(
-      (acc1, val1) =>
-        acc1 + val1.data.reduce((acc2: number, val2: number) => acc2 + val2, 0),
-      0
-    );
+    totalCost.value =
+      series.value.reduce(
+        (acc1, val1) =>
+          acc1 +
+          val1.data.reduce((acc2: number, val2: number) => acc2 + val2, 0),
+        0
+      ) / expectedYears.value;
   }
 };
 
