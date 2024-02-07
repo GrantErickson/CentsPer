@@ -4,8 +4,24 @@
       <div class="text-h4">CentsPer Mile</div>
     </v-card-title>
     <v-card-subtitle>
-      <div>Apples to apples on used cars</div>
-      <div>{{ carOptions.maxMiles }} miles is used as a car's lifetime</div>
+      <v-row>
+        <v-col>
+          <p>
+            Breaking a car's purchase price down by the cost to drive each mile.
+          </p>
+          <p>
+            Early (0-50,000) miles are worth more since there is typically
+            little maintenance.
+          </p>
+          <p>
+            Late (150,000-200,000) miles are worth less because maintenance is
+            more frequent and costly.
+          </p>
+          {{ Format.number(carOptions.maxMiles) }} miles is used as a car's
+          lifetime with {{ Format.number(carOptions.milesPerYear) }} miles
+          driven per year.</v-col
+        >
+      </v-row>
     </v-card-subtitle>
     <v-card-text>
       <div class="text-h5 mb-3">My Cars</div>
@@ -85,6 +101,7 @@
 import { ref, reactive, onMounted, type Ref } from "vue";
 import { Car } from "~/scripts/car";
 import { carOptions } from "~/scripts/carOptions";
+import { Format } from "~/scripts/format";
 
 const car: Ref<Car | null> = ref(null);
 const selectedCar: Ref<Car | null> = ref(null); // This is so we know the original to replace
