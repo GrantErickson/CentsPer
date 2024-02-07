@@ -178,6 +178,7 @@ const copyCar = (clickedCar: Car) => {
 const addCar = () => {
   car.value = new Car(2020, "", "", "", 0, 0, "", "");
   cars.push(car.value);
+  showCarEdit(car.value);
 };
 
 const showCarEdit = (clickedCar: Car) => {
