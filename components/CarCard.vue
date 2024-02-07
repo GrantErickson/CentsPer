@@ -7,7 +7,7 @@
     elevation="5"
   >
     <template v-slot:prepend>
-      <v-avatar size="48" :color="car.uiColor">
+      <v-avatar size="48" :color="car.uiColor" variant="elevated">
         <v-icon :icon="car.carIcon" size="x-large"></v-icon>
       </v-avatar>
     </template>
