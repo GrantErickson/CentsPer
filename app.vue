@@ -75,30 +75,7 @@
       <template v-slot:default="{  }">
         <v-card title="How to use Cents per Mile">
           <v-card-text>
-          <b>
-            Cents per Mile is a simple way to compare cars to determine the best value. 
-          </b>
-          <ul>
-          <li class="mt-4 ml-4">
-            Early (0-50,000) miles are worth more since there is typically
-            little maintenance. And new cars are fun to drive.
-          </li>
-          <li class="mt-4 ml-4">
-            Late (150,000-200,000) miles are worth less because maintenance is
-            more frequent and costly. Old cars can be stressful to drive.
-          </li>
-        </ul>
-
-        <hr class="mt-4"/>
-
-          <p  class="mt-4">
-          {{ Format.number(carOptions.maxMiles) }} miles is used as a car's
-          lifetime with {{ Format.number(carOptions.milesPerYear) }} miles
-          driven per year.
-          </p>
-
-          <p class="mt-4">Click the gear to change these settings.</p>
-
+            <Help-Content/>
           </v-card-text>
 
           <v-card-actions>
@@ -152,4 +129,5 @@ const clickHelpClose = () => {
 <style lang="sass">
 @import "./node_modules/@fontsource/roboto/index.css"
 @import "./assets/styles/app.scss"
+
 </style>
