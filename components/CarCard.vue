@@ -66,12 +66,11 @@
 
 <script setup lang="ts">
 import { Car } from "~/scripts/car";
-import { CarOptions } from "~/scripts/carOptions";
+import { carOptions } from "~/scripts/carOptions";
 import { Format } from "~/scripts/format";
 
 const props = defineProps({
   car: { type: Car, required: true },
-  carOptions: { type: CarOptions, required: true },
 });
 const emit = defineEmits({
   copy: () => {

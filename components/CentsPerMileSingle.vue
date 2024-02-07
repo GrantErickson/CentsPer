@@ -9,8 +9,8 @@
     </v-card-subtitle>
     <v-card-text>
       <div class="text-h5 mb-3">My Cars</div>
-      <v-progress-circular indeterminate v-if="!isLoaded"></v-progress-circular>
-      <v-row v-if="isLoaded">
+      <v-progress-circular indeterminate v-if="!carOptions.isLoaded" />
+      <v-row v-if="carOptions.isLoaded">
         <v-col
           v-for="(aCar, index) in cars"
           :key="aCar.key"
@@ -19,7 +19,6 @@
         >
           <CarCard
             :car="aCar"
-            :carOptions="carOptions"
             @click="showCarEdit(index)"
             @copy="copyCar(index)"
             @delete="removeCar(index)"
@@ -65,10 +64,10 @@
       <v-btn v-bind="props" text="Open Dialog"> </v-btn>
     </template>
 
-    <template v-slot:default="{ isActive }">
+    <template>
       <v-card title="Edit Car">
         <v-card-text>
-          <CarEdit :car="car" :carOptions="carOptions" />
+          <CarEdit :car="car" />
         </v-card-text>
 
         <v-card-actions>
@@ -85,11 +84,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, type Ref } from "vue";
 import { Car } from "~/scripts/car";
-import { CarOptions } from "~/scripts/carOptions";
+import { carOptions } from "~/scripts/carOptions";
 import VueApexCharts from "vue3-apexcharts";
-
-const isLoaded = ref(false);
-const carOptions = reactive(new CarOptions());
 
 const car: Ref<Car | null> = ref(null);
 const selectedCar: Ref<Car | null> = ref(null); // This is so we know the original to replace
@@ -100,11 +96,7 @@ const styles: Ref<string[]> = ref([]);
 const showEditor = ref(false);
 
 // TODO: This should be loaded a better way to make sure it awaits.
-CarOptions.loadReliabilityData().then(() => {
-  isLoaded.value = true;
-  //const instance = getCurrentInstance();
-  //instance!.proxy!.$forceUpdate();
-});
+await carOptions.loadReliabilityData();
 
 const options: Ref<any> = ref({});
 const series: Ref<any[]> = ref([]);
@@ -180,7 +172,7 @@ const removeCar = (index: number) => {
 };
 const copyCar = (index: number) => {
   const newCar = Car.deserialize(cars[index]);
-  newCar.details = "Copy of " + car.value.details;
+  newCar.details = "Copy of " + car.value?.details;
   cars.push(newCar);
   car.value = newCar;
   saveCars();

@@ -2,6 +2,9 @@
 import { parse } from "csv-parse/sync";
 import { ReliabilityResult, Reliability } from "./reliability";
 import { Format } from "./format";
+import { reactive, type Reactive } from "vue";
+
+export const carOptions: Reactive<CarOptions> = reactive(new CarOptions());
 
 export class CarOptions {
   private static carData: Map<number, string[][]> = new Map();
@@ -9,6 +12,8 @@ export class CarOptions {
 
   private _maxMiles: number;
   private _milesPerYear: number;
+
+  public isLoading: boolean = true;  
 
   public constructor() {
     this._maxMiles = Number(localStorage.getItem("maxMiles") || 200000);
@@ -63,7 +68,7 @@ export class CarOptions {
     "Indigo",
   ].sort((a, b) => a.localeCompare(b));
 
-  public static async loadReliabilityData(): Promise<void> {
+  public async loadReliabilityData(): Promise<void> {
     CarOptions.reliabilityData = [];
     const response = await fetch(`/reliability.csv`);
     const csv = await response.text();
@@ -73,6 +78,7 @@ export class CarOptions {
       var reliability = new Reliability(row[0], Number(row[1]), Number(row[2]));
       CarOptions.reliabilityData.push(reliability);
     }
+    this.isLoading = false;
   }
 
   public getReliability(make: string) {

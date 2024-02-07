@@ -1,19 +1,83 @@
 import type { MenuHTMLAttributes } from "vue";
-import { CarOptions } from "./carOptions";
+import { CarOptions, carOptions } from "./carOptions";
 import { Series } from "./series";
 
 export class Car {
   constructor(
-    public year: number,
-    public make: string,
-    public model: string,
-    public style: string,
+    private _year: number,
+    private _make: string,
+    private _model: string,
+    private _style: string,
     public price: number,
     public miles: number,
     public details: string,
     public color: string,
     public hotness: number = 10
   ) {}
+
+  public get year(): number {
+    return this._year;
+  }
+  public set year(value: number) {
+    this._year = value;
+    // See if the make is still valid
+    carOptions.makes(this.year).then((makes: string[]) => {
+      if (!makes.includes(this.make)) {
+        this.make = this.make; // This will cause this to be set and continue the refresh.
+      } else {
+        this.make = "";
+      }
+    });
+  }
+
+  public get make(): string {
+    return this._make;
+  }
+  public set make(value: string) {
+    this._make = value;
+    if (!this.make) {
+      this.model = "";
+    } else {
+      // See if the model is still valid
+      carOptions.model(this.year, this.make).then((models: string[]) => {
+        if (!models.includes(this.model)) {
+          this.model = this.model; // This will cause this to be set and continue the refresh.
+        } else {
+          this.model = "";
+        }
+      });
+    }
+  }
+
+  public get model(): string {
+    return this._model;
+  }
+  public set model(value: string) {
+    this._model = value;
+    if (!this.model) {
+      this.style = "";
+    } else {
+      // See if the style is still valid
+      carOptions
+        .styles(this.year, this.make, this.model)
+        .then((styles: string[]) => {
+          if (styles.length === 1) {
+            this.style = styles[0];
+          } else if (!styles.includes(this.style)) {
+            this.model = this.model; // This will cause this to be set and continue the refresh.
+          } else {
+            this.style = "";
+          }
+        });
+    }
+  }
+
+  public get style(): string {
+    return this._style;
+  }
+  public set style(value: string) {
+    this._style = value;
+  }
 
   public readonly key: string = Math.random().toString();
 
