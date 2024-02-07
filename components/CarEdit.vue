@@ -1,21 +1,50 @@
 <template>
   <div v-if="car != null">
     <v-row>
+      <v-btn-toggle v-model="car.isSale">
+        <v-btn :value="false">
+          <v-icon>mdi-currency-usd</v-icon>
+          Buy
+        </v-btn>
+        <v-btn :value="true">
+          <v-icon>mdi-currency-usd</v-icon>
+          Sell
+        </v-btn>
+      </v-btn-toggle>
+    </v-row>
+
+    <v-row>
       <v-col cols="12" class="v-col-sm-6 v-col-md-3">
         <v-autocomplete
           label="Year"
           v-model="car.year"
           :items="carOptions.years"
+          auto-select-first="exact"
         />
       </v-col>
       <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-        <v-autocomplete label="Make" v-model="car.make" :items="makes" />
+        <v-autocomplete
+          auto-select-first="exact"
+          label="Make"
+          v-model="car.make"
+          :items="makes"
+        />
       </v-col>
       <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-        <v-autocomplete label="Model" v-model="car.model" :items="models" />
+        <v-autocomplete
+          label="Model"
+          auto-select-first="exact"
+          v-model="car.model"
+          :items="models"
+        />
       </v-col>
       <v-col cols="12" class="v-col-sm-6 v-col-md-3">
-        <v-autocomplete label="Style" v-model="car.style" :items="styles" />
+        <v-autocomplete
+          label="Style"
+          auto-select-first="exact"
+          v-model="car.style"
+          :items="styles"
+        />
       </v-col>
     </v-row>
 
@@ -40,7 +69,7 @@
     </v-row>
 
     <v-row>
-      <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+      <v-col cols="12" class="v-col-md-6">
         <v-text-field
           label="Price"
           v-model="car.price"
@@ -48,10 +77,31 @@
           type="number"
         />
       </v-col>
-      <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+      <v-col cols="12" class="v-col-md-6">
         <v-text-field label="Miles" v-model="car.miles" type="number" />
       </v-col>
-      <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+    </v-row>
+
+    <v-row v-if="car.isSale">
+      <v-col cols="12" class="v-col-md-6">
+        <v-text-field
+          label="Sale Price"
+          v-model="car.sellPrice"
+          prepend-inner-icon="mdi-currency-usd"
+          type="number"
+        />
+      </v-col>
+      <v-col cols="12" class="v-col-md-6">
+        <v-text-field
+          label="Miles at Sale"
+          v-model="car.sellMiles"
+          type="number"
+          :prepend-inner-icon="car.sellMiles < car.miles ? 'mdi-alert' : ''"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" class="v-col-md-6">
         <v-text-field
           label="Cents per Mile"
           :model-value="car.centsPerMile() + ' ¢/mile'"

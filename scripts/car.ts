@@ -12,10 +12,17 @@ export class Car {
     public _style: string,
     public price: number,
     public miles: number,
+    public sellPrice: number,
+    public sellMiles: number,
     public details: string,
     public color: string,
-    public hotness: number = 10
-  ) {}
+    public hotness: number = 10,
+    public isSale: boolean = false
+  ) {
+    if (sellMiles < miles) {
+      this.sellMiles = carOptions.maxMiles;
+    }
+  }
 
   public get year(): number {
     return this._year;
@@ -91,23 +98,39 @@ export class Car {
       newCar._style,
       Number(newCar.price),
       Number(newCar.miles),
+      Number(newCar.sellPrice),
+      Number(newCar.sellMiles),
       newCar.details,
       newCar.color,
-      Number(newCar.hotness)
+      Number(newCar.hotness),
+      newCar.isSale
     );
     return car;
   }
 
-  public centsPerMile(): number {
-    let result = (this.price / (carOptions.maxMiles - this.miles)) * 100;
-    return Math.round(result * 100) / 100;
+  public get finalMiles(): number {
+    if (this.isSale) {
+      return this.sellMiles;
+    } else {
+      return carOptions.maxMiles;
+    }
+  }
+  public get finalPrice(): number {
+    if (this.isSale) {
+      return this.sellPrice;
+    } else {
+      return 0;
+    }
   }
 
-  public centsPerMileWithHotness(): number {
-    let result =
-      (this.price / (carOptions.maxMiles - this.miles)) *
-      (10 + (10 - this.hotness));
-    return Math.round(result * 100) / 10;
+  public centsPerMile(): number {
+    let result: Number = 0;
+    // this.price = Number(this.price);
+    // this.sellPrice = Number(this.sellPrice);
+    // this.miles = Number(this.miles);
+    // this.sellMiles = Number(this.sellMiles);
+    result = (this.price - this.finalPrice) / (this.finalMiles - this.miles);
+    return Math.round(result * 10000) / 100;
   }
 
   public get hotnessIcon() {
@@ -257,7 +280,7 @@ export class Car {
         fuel.data.push(fuelCostPerMile * carOptions.milesPerYear);
         insurance.data.push(insuranceYearly);
       }
-    } while (milesSum < carOptions.maxMiles);
+    } while (milesSum < this.finalMiles);
 
     return result;
   }

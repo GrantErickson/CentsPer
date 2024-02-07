@@ -121,8 +121,11 @@ const loadCars = () => {
       "SUV",
       28000,
       32000,
+      0,
+      0,
       "Nice green car at the dealership in Spokane",
-      "Green"
+      "Green",
+      false
     );
     cars.push(car.value);
     saveCars();

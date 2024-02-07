@@ -2,20 +2,38 @@
   <v-card
     class="mx-auto"
     :title="car.centsPerMile() + '¢ per mile'"
-    :subtitle="car.year + ' ' + car.make + ' ' + car.model + ' ' + car.style"
+    :subtitle="
+      (car.isSale ? 'Selling ' : 'Buying ') +
+      car.year +
+      ' ' +
+      car.make +
+      ' ' +
+      car.model +
+      ' ' +
+      car.style
+    "
     tonal
     elevation="5"
   >
     <template v-slot:prepend>
-      <v-avatar size="48" :color="car.uiColor" variant="elevated">
-        <v-icon :icon="car.carIcon" size="x-large"></v-icon>
+      <v-avatar
+        size="64"
+        style="display: block"
+        :color="car.uiColor"
+        variant="elevated"
+        class="pt-2"
+      >
+        <div>
+          <v-icon :icon="car.carIcon" size="x-large"></v-icon>
+        </div>
+        <div>{{ car.isSale ? "Sell " : "Buy " }}</div>
       </v-avatar>
     </template>
     <template v-slot:append>
       <v-tooltip text="Hotness">
         <template v-slot:activator="{ props }">
           <v-avatar
-            size="24"
+            size="36"
             style="font-size: 2em"
             variant="text"
             v-bind="props"
@@ -33,10 +51,20 @@
 
     <v-card-text>
       <div>
-        with {{ Format.number(car.miles) }} miles for
+        Buy with {{ Format.number(car.miles) }} miles for
         {{ Format.currency(car.price) }}
       </div>
-      <div class="mb-4">{{ car.details }}</div>
+      <div v-if="car.isSale">
+        Sell at {{ Format.number(car.sellMiles) }} miles for
+        {{ Format.currency(car.sellPrice) }}
+      </div>
+      <div v-if="!car.isSale">
+        Drive until end of life at
+        {{ Format.number(carOptions.maxMiles) }} miles.
+      </div>
+
+      <div class="mb-4 mt-2 text-body-1">{{ car.details }}</div>
+
       <v-table density="compact">
         <thead>
           <tr>
