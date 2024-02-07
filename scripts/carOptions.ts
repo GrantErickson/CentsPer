@@ -10,6 +10,7 @@ export class CarOptions {
 
   private _maxMiles: number;
   private _milesPerYear: number;
+  public showGraphCumulative: boolean = true;
 
   public isLoading: boolean = true;
 

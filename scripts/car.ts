@@ -212,13 +212,18 @@ export class Car {
     const insuranceYearly = 500;
     const fuelCostPerMile = 0.11;
 
+    let totalPurchase = 0;
+    let totalRepair = 0;
+    let totalMaintenance = 0;
+    let totalInsurance = 0;
+    let totalFuel = 0;
+
     do {
       year++;
       milesSum += carOptions.milesPerYear;
       let yearlyPurchase = Math.round(
         (centsPerMile / 100) * carOptions.milesPerYear
       );
-      vehicleCost.data.push(yearlyPurchase);
       let repairFactor = 0;
       if (milesSum <= 30000) repairFactor += 0.05;
       else if (milesSum <= 60000) repairFactor += 0.15;
@@ -236,10 +241,22 @@ export class Car {
         repairFactor += hundredThousandHit;
         hundredThousand = true;
       }
-      repairs.data.push(repairFactor * repairYearly);
-      maintenance.data.push(maintenanceYearly);
-      fuel.data.push(fuelCostPerMile * carOptions.milesPerYear);
-      insurance.data.push(insuranceYearly);
+
+      if (carOptions.showGraphCumulative) {
+        vehicleCost.data.push((totalPurchase += yearlyPurchase));
+        repairs.data.push((totalRepair += repairFactor * repairYearly));
+        maintenance.data.push((totalMaintenance += maintenanceYearly));
+        fuel.data.push(
+          (totalFuel += fuelCostPerMile * carOptions.milesPerYear)
+        );
+        insurance.data.push((totalInsurance += insuranceYearly));
+      } else {
+        vehicleCost.data.push(yearlyPurchase);
+        repairs.data.push(repairFactor * repairYearly);
+        maintenance.data.push(maintenanceYearly);
+        fuel.data.push(fuelCostPerMile * carOptions.milesPerYear);
+        insurance.data.push(insuranceYearly);
+      }
     } while (milesSum < carOptions.maxMiles);
 
     return result;

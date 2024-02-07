@@ -123,11 +123,18 @@ const setChart = () => {
   series.value = props.car.carLifetimeGraph();
 
   expectedYears.value = series.value[0].data.length;
-  totalCost.value = series.value.reduce(
-    (acc1, val1) =>
-      acc1 + val1.data.reduce((acc2: number, val2: number) => acc2 + val2, 0),
-    0
-  );
+  if (carOptions.showGraphCumulative) {
+    totalCost.value = series.value.reduce(
+      (acc: number, val: any) => acc + val.data[val.data.length - 1],
+      0
+    );
+  } else {
+    totalCost.value = series.value.reduce(
+      (acc1, val1) =>
+        acc1 + val1.data.reduce((acc2: number, val2: number) => acc2 + val2, 0),
+      0
+    );
+  }
 };
 
 onMounted(() => {
