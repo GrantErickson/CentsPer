@@ -19,8 +19,8 @@
           </p>
           {{ Format.number(carOptions.maxMiles) }} miles is used as a car's
           lifetime with {{ Format.number(carOptions.milesPerYear) }} miles
-          driven per year.</v-col
-        >
+          driven per year.
+        </v-col>
       </v-row>
     </v-card-subtitle>
     <v-card-text>
@@ -35,6 +35,7 @@
         >
           <CarCard
             :car="aCar"
+            :maxCentsPerMile="maxCentsPerMile"
             @click="showCarEdit(aCar)"
             @copy="copyCar(aCar)"
             @delete="removeCar(aCar)"
@@ -116,6 +117,7 @@ const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
 const showEditor = ref(false);
+const maxCentsPerMile = ref(0);
 
 // TODO: This should be loaded a better way to make sure it awaits.
 await carOptions.loadReliabilityData();
@@ -144,6 +146,8 @@ const setChart = () => {
       data: cars.map((car) => car.centsPerMile()),
     },
   ];
+
+  maxCentsPerMile.value = Math.max(...cars.map((car) => car.centsPerMile()));
 };
 
 onMounted(() => {

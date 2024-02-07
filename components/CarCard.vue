@@ -16,6 +16,12 @@
         {{ car.hotnessIcon }}
       </v-avatar>
     </template>
+
+    <v-progress-linear
+      :model-value="ranking"
+      :color="rankingColor"
+    ></v-progress-linear>
+
     <v-card-text>
       <div>
         with {{ Format.number(car.miles) }} miles for
@@ -85,7 +91,9 @@ import { Format } from "~/scripts/format";
 
 const props = defineProps({
   car: { type: Car, required: true },
+  maxCentsPerMile: { type: Number, required: true },
 });
+
 const emit = defineEmits({
   copy: () => {
     return true;
@@ -97,6 +105,15 @@ const emit = defineEmits({
 
 const options: Ref<any> = ref({});
 const series: Ref<any[]> = ref([]);
+const ranking = computed(() => {
+  return Math.round((props.car.centsPerMile() / props.maxCentsPerMile) * 100);
+});
+const rankingColor = computed(() => {
+  if (ranking.value < 30) return "red";
+  if (ranking.value < 50) return "orange";
+  if (ranking.value < 75) return "yellow";
+  return "green";
+});
 
 let timerId: NodeJS.Timeout = null!;
 watch(props.car, () => {
