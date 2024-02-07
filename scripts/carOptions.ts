@@ -4,8 +4,6 @@ import { ReliabilityResult, Reliability } from "./reliability";
 import { Format } from "./format";
 import { reactive, type Reactive } from "vue";
 
-export const carOptions: Reactive<CarOptions> = reactive(new CarOptions());
-
 export class CarOptions {
   private static carData: Map<number, string[][]> = new Map();
   private static reliabilityData: Reliability[] = [];
@@ -13,9 +11,10 @@ export class CarOptions {
   private _maxMiles: number;
   private _milesPerYear: number;
 
-  public isLoading: boolean = true;  
+  public isLoading: boolean = true;
 
   public constructor() {
+    console.log("Creating carOptions");
     this._maxMiles = Number(localStorage.getItem("maxMiles") || 200000);
     this._milesPerYear = Number(localStorage.getItem("milesPerYear") || 15000);
   }
@@ -82,15 +81,18 @@ export class CarOptions {
   }
 
   public getReliability(make: string) {
-    var reliability = CarOptions.reliabilityData.find(
-      (item) => item.make.toLowerCase() === make.toLocaleLowerCase()
-    );
-    if (reliability)
-      return new ReliabilityResult(
-        make,
-        Format.number(reliability.rating) + "/100",
-        Format.currency(reliability.perYearCost)
+    if (make) {
+      var reliability = CarOptions.reliabilityData.find(
+        (item) => item.make.toLowerCase() === make.toLocaleLowerCase()
       );
+      if (reliability) {
+        return new ReliabilityResult(
+          make,
+          Format.number(reliability.rating) + "/100",
+          Format.currency(reliability.perYearCost)
+        );
+      }
+    }
     return new ReliabilityResult(make, "Unknown", "Unknown");
   }
 
@@ -139,3 +141,5 @@ export class CarOptions {
     return [];
   }
 }
+
+export const carOptions: Reactive<CarOptions> = reactive(new CarOptions());

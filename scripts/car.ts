@@ -1,5 +1,5 @@
 import type { MenuHTMLAttributes } from "vue";
-import { CarOptions, carOptions } from "./carOptions";
+import { carOptions } from "./carOptions";
 import { Series } from "./series";
 
 export class Car {
@@ -39,7 +39,7 @@ export class Car {
       this.model = "";
     } else {
       // See if the model is still valid
-      carOptions.model(this.year, this.make).then((models: string[]) => {
+      carOptions.models(this.year, this.make).then((models: string[]) => {
         if (!models.includes(this.model)) {
           this.model = this.model; // This will cause this to be set and continue the refresh.
         } else {
@@ -64,7 +64,7 @@ export class Car {
           if (styles.length === 1) {
             this.style = styles[0];
           } else if (!styles.includes(this.style)) {
-            this.model = this.model; // This will cause this to be set and continue the refresh.
+            // Do nothing the value is right
           } else {
             this.style = "";
           }
@@ -96,14 +96,15 @@ export class Car {
     return car;
   }
 
-  public centsPerMile(lifetimeMiles: number = 200000): number {
-    let result = (this.price / (lifetimeMiles - this.miles)) * 100;
+  public centsPerMile(): number {
+    let result = (this.price / (carOptions.maxMiles - this.miles)) * 100;
     return Math.round(result * 100) / 100;
   }
 
-  public centsPerMileWithHotness(lifetimeMiles: number = 200000): number {
+  public centsPerMileWithHotness(): number {
     let result =
-      (this.price / (lifetimeMiles - this.miles)) * (10 + (10 - this.hotness));
+      (this.price / (carOptions.maxMiles - this.miles)) *
+      (10 + (10 - this.hotness));
     return Math.round(result * 100) / 10;
   }
 
@@ -182,10 +183,7 @@ export class Car {
     }
   }
 
-  public carLifetimeGraph(
-    maxMiles: number = 200000,
-    milesPerYear: number = 15000
-  ): Series[] {
+  public carLifetimeGraph(): Series[] {
     // Create ApexChart data
     // For each year of the car's lifetime until maxMiles
     let result: Series[] = [];
@@ -203,7 +201,7 @@ export class Car {
     // loop until maxMiles is reached with milesPerYear each year
     let year = 0;
     let milesSum = Number(this.miles);
-    let centsPerMile = this.centsPerMile(maxMiles);
+    let centsPerMile = this.centsPerMile();
     let hundredThousand: boolean = this.miles > 100000;
     const hundredThousandHit = 0.4;
 
@@ -214,8 +212,10 @@ export class Car {
 
     do {
       year++;
-      milesSum += milesPerYear;
-      let yearlyPurchase = Math.round((centsPerMile / 100) * milesPerYear);
+      milesSum += carOptions.milesPerYear;
+      let yearlyPurchase = Math.round(
+        (centsPerMile / 100) * carOptions.milesPerYear
+      );
       vehicleCost.data.push(yearlyPurchase);
       let repairFactor = 0;
       if (milesSum <= 30000) repairFactor += 0.05;
@@ -236,9 +236,9 @@ export class Car {
       }
       repairs.data.push(repairFactor * repairYearly);
       maintenance.data.push(maintenanceYearly);
-      fuel.data.push(fuelCostPerMile * milesPerYear);
+      fuel.data.push(fuelCostPerMile * carOptions.milesPerYear);
       insurance.data.push(insuranceYearly);
-    } while (milesSum < maxMiles);
+    } while (milesSum < carOptions.maxMiles);
 
     return result;
   }

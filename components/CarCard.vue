@@ -117,8 +117,8 @@ const setChart = () => {
   };
 
   series.value = props.car.carLifetimeGraph(
-    props.carOptions.maxMiles,
-    props.carOptions.milesPerYear
+    carOptions.maxMiles,
+    carOptions.milesPerYear
   );
 
   expectedYears.value = series.value[0].data.length;

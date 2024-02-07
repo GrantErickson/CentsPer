@@ -9,8 +9,8 @@
     </v-card-subtitle>
     <v-card-text>
       <div class="text-h5 mb-3">My Cars</div>
-      <v-progress-circular indeterminate v-if="!carOptions.isLoaded" />
-      <v-row v-if="carOptions.isLoaded">
+      <v-progress-circular indeterminate v-if="carOptions.isLoading" />
+      <v-row v-if="!carOptions.isLoading">
         <v-col
           v-for="(aCar, index) in cars"
           :key="aCar.key"
@@ -27,14 +27,14 @@
         <v-col cols="12" class="v-col-md-6 v-col-lg-4">
           <v-card
             class="mx-auto"
-            title="Add Car"
+            title="Add a Car"
             variant="tonal"
             @click="addCar"
             color="green"
           >
             <template v-slot:prepend>
-              <v-avatar color="blue-darken-2">
-                <v-icon icon="mdi-car"></v-icon>
+              <v-avatar color="blue-darken-2" size="large">
+                <v-icon icon="mdi-plus" size="x-large"></v-icon>
               </v-avatar>
             </template>
             <template v-slot:append>
@@ -64,7 +64,7 @@
       <v-btn v-bind="props" text="Open Dialog"> </v-btn>
     </template>
 
-    <template>
+    <template v-slot:default="{ isActive }">
       <v-card title="Edit Car">
         <v-card-text>
           <CarEdit :car="car" />
@@ -85,11 +85,10 @@
 import { ref, reactive, onMounted, type Ref } from "vue";
 import { Car } from "~/scripts/car";
 import { carOptions } from "~/scripts/carOptions";
-import VueApexCharts from "vue3-apexcharts";
 
 const car: Ref<Car | null> = ref(null);
 const selectedCar: Ref<Car | null> = ref(null); // This is so we know the original to replace
-const cars = reactive(new Array<Car>());
+const cars = reactive([] as Car[]);
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
 const styles: Ref<string[]> = ref([]);
@@ -131,6 +130,7 @@ onMounted(() => {
 
 const loadCars = () => {
   const carsJson = localStorage.getItem("cars");
+  console.log("carsJson", carsJson);
   if (carsJson) {
     cars.push(...JSON.parse(carsJson).map((car: any) => Car.deserialize(car)));
   }

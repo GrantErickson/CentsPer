@@ -71,39 +71,39 @@ const props = defineProps({
   car: { type: Car, required: true },
 });
 
-// onMounted(() => {
-//   // Update makes when the year changes
-//   watch(
-//     () => props.car.year,
-//     (year) => {
-//       if (year != null) {
-//         makes.value = carOptions.getMakes(year);
-//       }
-//     }
-//   );
+onMounted(() => {
+  // Update makes when the year changes
+  watch(
+    () => props.car.year,
+    async (year) => {
+      if (year != null) {
+        makes.value = await carOptions.makes(year);
+      }
+    }
+  );
 
-//   watch(
-//     () => props.car.make,
-//     (make) => {
-//       if (make != null) {
-//         models.value = carOptions.getModels(props.car.year, make);
-//       }
-//     }
-//   );
+  watch(
+    () => props.car.make,
+    async (make) => {
+      if (make != null) {
+        models.value = await carOptions.models(props.car.year, make);
+      }
+    }
+  );
 
-//   watch(
-//     () => props.car.model,
-//     (model) => {
-//       if (model != null) {
-//         models.value = carOptions.getModels(
-//           props.car.year,
-//           props.car.make,
-//           model
-//         );
-//       }
-//     }
-//   );
-// });
+  watch(
+    () => props.car.model,
+    async (model) => {
+      if (model != null) {
+        styles.value = await carOptions.styles(
+          props.car.year,
+          props.car.make,
+          model
+        );
+      }
+    }
+  );
+});
 
 const makes: Ref<string[]> = ref([]);
 const models: Ref<string[]> = ref([]);
