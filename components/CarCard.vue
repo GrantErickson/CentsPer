@@ -57,9 +57,13 @@
       </v-table>
     </v-card-text>
     <v-card-actions>
-      <v-icon @click="$emit('copy')" color="blue" icon="mdi-content-copy" />
+      <v-icon
+        @click.stop="$emit('copy')"
+        color="blue"
+        icon="mdi-content-copy"
+      />
       <v-spacer></v-spacer>
-      <v-icon @click="$emit('delete')" color="red" icon="mdi-delete" />
+      <v-icon @click.stop="$emit('delete')" color="red" icon="mdi-delete" />
     </v-card-actions>
   </v-card>
 </template>
@@ -116,10 +120,7 @@ const setChart = () => {
     maintainAspectRatio: false,
   };
 
-  series.value = props.car.carLifetimeGraph(
-    carOptions.maxMiles,
-    carOptions.milesPerYear
-  );
+  series.value = props.car.carLifetimeGraph();
 
   expectedYears.value = series.value[0].data.length;
   totalCost.value = series.value.reduce(

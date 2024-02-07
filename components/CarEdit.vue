@@ -75,34 +75,42 @@ onMounted(() => {
   // Update makes when the year changes
   watch(
     () => props.car.year,
-    async (year) => {
-      if (year != null) {
-        makes.value = await carOptions.makes(year);
-      }
-    }
+    async (year) => updateMakes(year)
   );
+  const updateMakes = async (year: number) => {
+    if (year != null) {
+      makes.value = await carOptions.makes(year);
+    }
+  };
 
   watch(
     () => props.car.make,
-    async (make) => {
-      if (make != null) {
-        models.value = await carOptions.models(props.car.year, make);
-      }
-    }
+    async (make) => updateModels(make)
   );
+  const updateModels = async (make: string) => {
+    if (make != null) {
+      models.value = await carOptions.models(props.car.year, make);
+    }
+  };
 
   watch(
     () => props.car.model,
-    async (model) => {
-      if (model != null) {
-        styles.value = await carOptions.styles(
-          props.car.year,
-          props.car.make,
-          model
-        );
-      }
-    }
+    async (model) => updateStyles(model)
   );
+  const updateStyles = async (model: string) => {
+    if (model != null) {
+      styles.value = await carOptions.styles(
+        props.car.year,
+        props.car.make,
+        model
+      );
+    }
+  };
+
+  // Make sure they are all loaded for the current car values.
+  updateMakes(props.car.year);
+  updateModels(props.car.make);
+  updateStyles(props.car.model);
 });
 
 const makes: Ref<string[]> = ref([]);

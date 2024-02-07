@@ -2,7 +2,7 @@
 import { parse } from "csv-parse/sync";
 import { ReliabilityResult, Reliability } from "./reliability";
 import { Format } from "./format";
-import { reactive, type Reactive } from "vue";
+import { reactive } from "vue";
 
 export class CarOptions {
   private static carData: Map<number, string[][]> = new Map();
@@ -134,7 +134,7 @@ export class CarOptions {
     const models = data
       .filter((item: string[]) => item[1] === make && item[2] === model)
       .map((item: string[]) => item[3] as string);
-    if (models.length === 1) {
+    if (models.length === 1 && models[0]) {
       return JSON.parse(models[0]) as string[];
     }
     if (year && make && model) return ["Standard"];

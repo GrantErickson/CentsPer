@@ -12,16 +12,16 @@
       <v-progress-circular indeterminate v-if="carOptions.isLoading" />
       <v-row v-if="!carOptions.isLoading">
         <v-col
-          v-for="(aCar, index) in cars"
+          v-for="aCar in cars"
           :key="aCar.key"
           cols="12"
           class="v-col-md-6 v-col-lg-4"
         >
           <CarCard
             :car="aCar"
-            @click="showCarEdit(index)"
-            @copy="copyCar(index)"
-            @delete="removeCar(index)"
+            @click="showCarEdit(aCar)"
+            @copy="copyCar(aCar)"
+            @delete="removeCar(aCar)"
           />
         </v-col>
         <v-col cols="12" class="v-col-md-6 v-col-lg-4">
@@ -157,11 +157,12 @@ const saveCars = () => {
   setChart();
 };
 
-const removeCar = (index: number) => {
+const removeCar = (clickedCar: Car) => {
   // Prompt for confirmation
   if (!confirm("Are you sure you want to delete this car?")) {
     return;
   }
+  let index = cars.indexOf(clickedCar);
   cars.splice(index, 1);
   if (cars.length > 0) {
     car.value = cars[index - 1];
@@ -170,11 +171,11 @@ const removeCar = (index: number) => {
   }
   saveCars();
 };
-const copyCar = (index: number) => {
-  const newCar = Car.deserialize(cars[index]);
+const copyCar = (clickedCar: Car) => {
+  const newCar = Car.deserialize(clickedCar);
+  console.log(newCar);
   newCar.details = "Copy of " + car.value?.details;
   cars.push(newCar);
-  car.value = newCar;
   saveCars();
 };
 
@@ -183,9 +184,9 @@ const addCar = () => {
   cars.push(car.value);
 };
 
-const showCarEdit = (index: number) => {
+const showCarEdit = (clickedCar: Car) => {
   // Create a new car to edit so we can cancel easily.
-  selectedCar.value = cars[index];
+  selectedCar.value = clickedCar;
   car.value = Car.deserialize(selectedCar.value);
   showEditor.value = true;
 };

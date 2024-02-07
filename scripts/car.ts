@@ -4,10 +4,12 @@ import { Series } from "./series";
 
 export class Car {
   constructor(
-    private _year: number,
-    private _make: string,
-    private _model: string,
-    private _style: string,
+    // These first four values need to be public (instead of private) in order for a bunch of type errors to go away.
+    // For some reason TS has a hard time detecting that something is a Car when you have private fields like this.
+    public _year: number,
+    public _make: string,
+    public _model: string,
+    public _style: string,
     public price: number,
     public miles: number,
     public details: string,
@@ -22,7 +24,7 @@ export class Car {
     this._year = value;
     // See if the make is still valid
     carOptions.makes(this.year).then((makes: string[]) => {
-      if (!makes.includes(this.make)) {
+      if (makes.includes(this.make)) {
         this.make = this.make; // This will cause this to be set and continue the refresh.
       } else {
         this.make = "";
@@ -40,7 +42,7 @@ export class Car {
     } else {
       // See if the model is still valid
       carOptions.models(this.year, this.make).then((models: string[]) => {
-        if (!models.includes(this.model)) {
+        if (models.includes(this.model)) {
           this.model = this.model; // This will cause this to be set and continue the refresh.
         } else {
           this.model = "";
@@ -63,7 +65,7 @@ export class Car {
         .then((styles: string[]) => {
           if (styles.length === 1) {
             this.style = styles[0];
-          } else if (!styles.includes(this.style)) {
+          } else if (styles.includes(this.style)) {
             // Do nothing the value is right
           } else {
             this.style = "";
@@ -83,10 +85,10 @@ export class Car {
 
   public static deserialize(newCar: any) {
     let car = new Car(
-      Number(newCar.year),
-      newCar.make,
-      newCar.model,
-      newCar.style,
+      Number(newCar._year),
+      newCar._make,
+      newCar._model,
+      newCar._style,
       Number(newCar.price),
       Number(newCar.miles),
       newCar.details,
