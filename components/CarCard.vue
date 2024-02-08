@@ -1,7 +1,11 @@
 <template>
   <v-card
     class="mx-auto"
-    :title="car.centsPerMile().toFixed(1) + '¢ per mile'"
+    :title="
+      car.centsPerMile().toFixed(1) +
+      '¢ per mile' +
+      (car.isSale ? ' driven' : '')
+    "
     :subtitle="
       (car.isSale ? 'Selling ' : 'Buying ') +
       car.year +
