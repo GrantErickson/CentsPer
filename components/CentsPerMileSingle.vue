@@ -132,8 +132,7 @@ const loadCars = () => {
       0,
       0,
       "Nice green car at the dealership in Spokane",
-      "Green",
-      false
+      "Green"
     );
     cars.push(car.value);
     saveCars();
@@ -168,7 +167,7 @@ const copyCar = (clickedCar: Car) => {
 };
 
 const addCar = () => {
-  car.value = new Car(2020, "", "", "", 0, 0, "", "");
+  car.value = new Car(2020, "", "", "", 0, 0, 0, 0, "", "blue");
   cars.push(car.value);
   showCarEdit(car.value);
 };

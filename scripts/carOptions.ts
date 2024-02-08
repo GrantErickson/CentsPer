@@ -38,10 +38,10 @@ export class CarOptions {
     localStorage.setItem("milesPerYear", this._milesPerYear.toString());
   }
 
-  public get showGraphCumulative(): number {
+  public get showGraphCumulative(): boolean {
     return this._showGraphCumulative;
   }
-  public set showGraphCumulative(value: number) {
+  public set showGraphCumulative(value: boolean) {
     this._showGraphCumulative = value;
     localStorage.setItem(
       "showGraphCumulative",
@@ -156,4 +156,4 @@ export class CarOptions {
   }
 }
 
-export const carOptions: Reactive<CarOptions> = reactive(new CarOptions());
+export const carOptions = reactive(new CarOptions());
