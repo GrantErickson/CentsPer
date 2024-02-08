@@ -12,7 +12,7 @@
           v-for="aCar in cars"
           :key="aCar.key"
           cols="12"
-          class="v-col-md-6 v-col-lg-4"
+          class="v-col-md-6 v-col-lg-4 v-col-xl-3"
         >
           <CarCard
             :car="aCar"
@@ -48,12 +48,18 @@
   </v-card>
 
   <v-dialog v-model="showEditor" v-if="car != null" max-width="1000">
-    <v-card title="Edit Car">
-      <v-card-text>
+    <v-card>
+      <v-card-title class="mt-4">
+        <v-avatar size="48" :color="car.uiColor" variant="elevated">
+          <v-icon :icon="car.carIcon" size="large"></v-icon>
+        </v-avatar>
+        Edit Your Car
+      </v-card-title>
+      <v-card-text class="pt-0">
         <CarEdit :car="car" />
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions class="bg-brown-lighten-3 py-4 pr-10">
         <v-spacer></v-spacer>
 
         <v-btn
@@ -61,11 +67,13 @@
           text="Save"
           color="green"
           @click="saveCarEdit"
+          class="bg-white"
         ></v-btn>
         <v-btn
           elevation="4"
           text="Cancel"
           color="red"
+          class="bg-white"
           @click="cancelCarEdit"
         ></v-btn>
       </v-card-actions>

@@ -124,13 +124,13 @@ export class Car {
   }
 
   public centsPerMile(): number {
-    let result: Number = 0;
+    let result: number = 0;
     // this.price = Number(this.price);
     // this.sellPrice = Number(this.sellPrice);
     // this.miles = Number(this.miles);
     // this.sellMiles = Number(this.sellMiles);
     result = (this.price - this.finalPrice) / (this.finalMiles - this.miles);
-    return Math.round(result * 10000) / 100;
+    return Math.round(result * 1000) / 10;
   }
 
   public get hotnessIcon() {
@@ -169,6 +169,8 @@ export class Car {
         return "mdi-car-hatchback";
       case "Coupe":
         return "mdi-car-sports";
+      case "Convertible":
+        return "mdi-car-convertible";
       default:
         return "mdi-car";
     }

@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="mx-auto"
-    :title="car.centsPerMile() + '¢ per mile'"
+    :title="car.centsPerMile().toFixed(1) + '¢ per mile'"
     :subtitle="
       (car.isSale ? 'Selling ' : 'Buying ') +
       car.year +
@@ -12,7 +12,6 @@
       ' ' +
       car.style
     "
-    tonal
     elevation="5"
   >
     <template v-slot:prepend>
@@ -76,7 +75,7 @@
         <tbody>
           <tr>
             <td class="pl-0">
-              {{ Format.number(carOptions.maxMiles - car.miles) }}
+              {{ Format.number(car.finalMiles - car.miles) }}
             </td>
             <td class="text-center">{{ expectedYears }} years</td>
             <td class="pr-0 text-right">{{ Format.currency(totalCost) }}</td>
@@ -92,6 +91,7 @@
       <apexchart height="200" :options="options" :series="series" />
 
       <hr class="mt-2 mb-3" />
+      <div class="text-subtitle-1 mt-3">Reliability</div>
       <v-table density="compact">
         <thead>
           <tr>
