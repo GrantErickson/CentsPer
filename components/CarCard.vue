@@ -52,7 +52,7 @@
       :color="rankingColor"
     ></v-progress-linear>
 
-    <v-card-text>
+    <v-card-text class="pb-0">
       <div>
         Buy with {{ Format.number(car.miles) }} miles for
         {{ Format.currency(car.price) }}
