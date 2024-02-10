@@ -25,14 +25,16 @@
         </v-col>
         <v-col cols="12" class="v-col-md-6 v-col-lg-4 v-col-xl-3">
           <v-card
+            id="add-car"
             class="mx-auto"
             title="Add a Car"
             variant="tonal"
             @click="addCar"
             color="green"
+            elevation="3"
           >
             <template v-slot:prepend>
-              <v-avatar color="blue-darken-2" size="large">
+              <v-avatar color="blue-darken-2" size="large" class="mt-4">
                 <v-icon icon="mdi-plus" size="x-large"></v-icon>
               </v-avatar>
             </template>
@@ -195,4 +197,8 @@ const cancelCarEdit = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#add-car >>> .v-card-item .v-card-title {
+  padding-top: 14px !important;
+}
+</style>
