@@ -66,14 +66,17 @@
         {{ Format.number(carOptions.maxMiles) }} miles.
       </div>
 
-      <div class="mb-4 mt-2 text-body-1">{{ car.details }}</div>
+      <div class="mb-4 mt-2 text-body-1">
+        <span v-if="car.details">{{ car.details }}</span>
+        <span v-if="!car.details">No Details</span>
+      </div>
 
       <v-table density="compact">
         <thead>
           <tr>
             <th class="pl-0">Expected Miles</th>
             <th class="text-center">Lifetime</th>
-            <th class="pr-0 text-right">Yearly Cost</th>
+            <th class="pr-0 text-right">Est. Yearly Cost *</th>
           </tr>
         </thead>
         <tbody>
@@ -94,7 +97,7 @@
       </div>
       <apexchart height="200" :options="options" :series="series" />
 
-      <hr class="mt-2 mb-3" />
+      <!-- <hr class="mt-2 mb-3" />
       <div class="text-subtitle-1 mt-3">Reliability</div>
       <v-table density="compact">
         <thead>
@@ -113,7 +116,7 @@
             </td>
           </tr>
         </tbody>
-      </v-table>
+      </v-table> -->
     </v-card-text>
     <v-card-actions>
       <v-icon

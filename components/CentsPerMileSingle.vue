@@ -23,7 +23,7 @@
             @delete="removeCar(aCar)"
           />
         </v-col>
-        <v-col cols="12" class="v-col-md-6 v-col-lg-4">
+        <v-col cols="12" class="v-col-md-6 v-col-lg-4 v-col-xl-3">
           <v-card
             class="mx-auto"
             title="Add a Car"

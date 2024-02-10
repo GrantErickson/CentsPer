@@ -43,7 +43,7 @@
             <v-row dense>
               <v-col cols="12">
                 <v-checkbox
-                  v-model="carOptions.showGraphCumulative"
+                  v-model="showGraphCumulative"
                   label="Show Cumulative Yearly Costs"
                 />
               </v-col>
@@ -59,10 +59,12 @@
                   label="Miles Per Year"
                   type="number"/>
               </v-col>
-            </v-row>
+            </v-row>{{ showGraphCumulative }}
           </v-card-text>
 
+
           <v-card-actions>
+            <v-btn elevation="4" text="Restore Defaults" color="orange" @click="clickSettingsDefault"></v-btn>
             <v-spacer></v-spacer>
             <v-btn elevation="4" text="Close" color="blue" @click="clickSettingsClose"></v-btn>
           </v-card-actions>
@@ -101,6 +103,7 @@ import { Format } from './scripts/format';
 const showSettings = ref(false);
 const showHelp = ref(false);
 const refreshKey = ref(0);
+const showGraphCumulative = ref(false); // This is a staging variable so that screen doesn't change behind the dialog.
 
 onMounted(() => {
   if (!localStorage.getItem('firstTime')) {
@@ -110,11 +113,19 @@ onMounted(() => {
 });
 
 const clickGear = () => {
+  showGraphCumulative.value = carOptions.showGraphCumulative;
   showSettings.value = true;
 }
 const clickSettingsClose = () => {
+  carOptions.showGraphCumulative = showGraphCumulative.value;
   showSettings.value = false;
   refreshKey.value++;
+}
+
+const clickSettingsDefault = () => {
+  showGraphCumulative.value = false;
+  carOptions.maxMiles = 200000;
+  carOptions.milesPerYear = 15000;
 }
 
 const clickHelp = () => {
@@ -129,5 +140,4 @@ const clickHelpClose = () => {
 <style lang="sass">
 @import "./node_modules/@fontsource/roboto/index.css"
 @import "./assets/styles/app.scss"
-
 </style>

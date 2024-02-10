@@ -34,6 +34,11 @@
   <p>Calculation: [Total Cost] / ([Max Miles] - [Miles])</p>
   <p>Example: 31,000 / (200,000 - 40,000) = $.1824 = 18.24¢ per mile</p>
 
+  <p>
+    * Note that Repairs and Maintenance are very rough estimates and not based on
+    make or model.
+  </p>
+
   <hr class="mt-4" />
 
   <p><b>Settings</b></p>
