@@ -98,6 +98,7 @@ const styles: Ref<string[]> = ref([]);
 const showEditor = ref(false);
 const maxCentsPerMile = ref(0);
 const minCentsPerMile = ref(0);
+let carIsNew = false;
 
 // TODO: This should be loaded a better way to make sure it awaits.
 await carOptions.loadReliabilityData();
@@ -117,7 +118,6 @@ onMounted(() => {
 
 const loadCars = () => {
   const carsJson = localStorage.getItem("cars");
-  console.log("carsJson", carsJson);
   if (carsJson) {
     cars.push(...JSON.parse(carsJson).map((car: any) => Car.deserialize(car)));
   }
@@ -162,8 +162,7 @@ const removeCar = (clickedCar: Car) => {
 };
 const copyCar = (clickedCar: Car) => {
   const newCar = Car.deserialize(clickedCar);
-  console.log(newCar);
-  newCar.details = "Copy of " + car.value?.details;
+  newCar.details = "Copy of " + newCar.details;
   cars.push(newCar);
   saveCars();
 };
@@ -171,13 +170,14 @@ const copyCar = (clickedCar: Car) => {
 const addCar = () => {
   car.value = new Car(2020, "", "", "", 0, 0, 0, 0, "", "blue");
   cars.push(car.value);
-  showCarEdit(car.value);
+  showCarEdit(car.value, true);
 };
 
-const showCarEdit = (clickedCar: Car) => {
+const showCarEdit = (clickedCar: Car, isNew: boolean = false) => {
   // Create a new car to edit so we can cancel easily.
   selectedCar.value = clickedCar;
   car.value = Car.deserialize(selectedCar.value);
+  carIsNew = isNew;
   showEditor.value = true;
 };
 
@@ -187,10 +187,16 @@ const saveCarEdit = () => {
   cars[cars.indexOf(selectedCar.value!)] = car.value!;
   car.value = null;
   selectedCar.value = null;
+  carIsNew = false;
   saveCars();
 };
 
 const cancelCarEdit = () => {
+  // If there is nothing assigned to the car, delete it
+  if (carIsNew) {
+    cars.splice(cars.indexOf(car.value!), 1);
+  }
+  carIsNew = false;
   showEditor.value = false;
   car.value = null;
   selectedCar.value = null;
@@ -198,7 +204,7 @@ const cancelCarEdit = () => {
 </script>
 
 <style scoped>
-#add-car >>> .v-card-item .v-card-title {
+#add-car :deep(.v-card-item .v-card-title) {
   padding-top: 14px !important;
 }
 </style>

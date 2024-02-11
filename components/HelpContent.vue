@@ -35,8 +35,8 @@
   <p>Example: 31,000 / (200,000 - 40,000) = $.1824 = 18.24¢ per mile</p>
 
   <p>
-    * Note that Repairs and Maintenance are very rough estimates and not based on
-    make or model.
+    * Note that Repairs and Maintenance are very rough estimates and not based
+    on make or model.
   </p>
 
   <hr class="mt-4" />
@@ -99,7 +99,6 @@ const series = [
   },
 ];
 let totalCost = series[0].data.reduce((acc, num) => acc + num);
-console.log(totalCost);
 for (const num of series[0].data) {
   series[1].data.push(totalCost / series[0].data.length);
 }

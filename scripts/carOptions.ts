@@ -15,7 +15,6 @@ export class CarOptions {
   public isLoading: boolean = true;
 
   public constructor() {
-    console.log("Creating carOptions");
     this._maxMiles = Number(localStorage.getItem("maxMiles") || 200000);
     this._milesPerYear = Number(localStorage.getItem("milesPerYear") || 15000);
     this._showGraphCumulative =
