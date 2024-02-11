@@ -59,7 +59,7 @@
                   label="Miles Per Year"
                   type="number"/>
               </v-col>
-            </v-row>{{ showGraphCumulative }}
+            </v-row>
           </v-card-text>
 
 
