@@ -1,6 +1,6 @@
 export class Format {
   public static currency(value: number): string {
-    return value.toLocaleString("en-US", {
+    return Number(value).toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 0,
@@ -9,6 +9,6 @@ export class Format {
   }
 
   public static number(value: number): string {
-    return value.toLocaleString("en-US");
+    return Number(value).toLocaleString("en-US");
   }
 }
