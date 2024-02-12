@@ -2,6 +2,17 @@
   <b>
     Cents per Mile is a simple way to compare cars to determine the best value.
   </b>
+
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/p5JtV0dNMwI?si=EudqIsuYXxjhrV7o"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+
   <ul>
     <li>
       Early (0-50,000) miles are worth more since there is typically little

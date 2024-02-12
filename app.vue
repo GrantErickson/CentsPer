@@ -33,7 +33,7 @@
       </v-main>
 
       <v-footer app>
-        <span>&copy; 2024</span>
+        <span>&copy; 2024 MicaPeak Solutions</span>
       </v-footer>
 
       <v-dialog v-model="showSettings" width="500">
