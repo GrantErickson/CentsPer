@@ -61,6 +61,16 @@
     <li>{{ Format.number(carOptions.milesPerYear) }} miles driven per year.</li>
   </ul>
   <p>Click the gear in the upper right to change these settings.</p>
+  <hr class="my-4" />
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/YB25tsyef20?si=XeQzoz1yheaoZDMd"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
 </template>
 
 <script setup lang="ts">
