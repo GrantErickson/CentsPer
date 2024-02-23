@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nuxtjs/google-analytics": "^2.4.0",
     "nuxt": "^3.9.3",
     "sass": "^1.70.0",
     "sass-loader": "^14.0.0",

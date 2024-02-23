@@ -15,6 +15,9 @@ export default defineNuxtConfig({
       });
     },
   ],
+  googleAnalytics: {
+    id: "G-HTKLMCKTF7",
+  },
   vite: {
     vue: {
       template: {
@@ -22,4 +25,5 @@ export default defineNuxtConfig({
       },
     },
   },
+  buildModules: ["@nuxtjs/google-analytics"],
 });
