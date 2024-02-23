@@ -14,8 +14,9 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }));
       });
     },
+    "nuxt-gtag",
   ],
-  googleAnalytics: {
+  gtag: {
     id: "G-HTKLMCKTF7",
   },
   vite: {
@@ -25,5 +26,4 @@ export default defineNuxtConfig({
       },
     },
   },
-  buildModules: ["@nuxtjs/google-analytics"],
 });
