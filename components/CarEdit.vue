@@ -82,6 +82,13 @@
           density="comfortable"
         />
       </v-col>
+      <v-col cols="12" class="v-col-md-12 v-col-lg-12 py-0">
+        <v-text-field
+          label="Link"
+          v-model="car.link"
+          density="comfortable"
+        />
+      </v-col>
     </v-row>
 
     <div class="text-body-2 bg-brown text-center my-4">

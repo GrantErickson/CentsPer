@@ -66,7 +66,7 @@
         {{ Format.number(carOptions.maxMiles) }} miles.
       </div>
 
-      <div class="mb-4 mt-2 text-body-1">
+      <div class="mb-4 mt-2 text-body-2">
         <span v-if="car.details">{{ car.details }}</span>
         <span v-if="!car.details">No Details</span>
       </div>
@@ -124,6 +124,12 @@
         color="blue"
         icon="mdi-content-copy"
       />
+      <div v-if="car.link" class="ml-4">
+        <a :href="car.link" target="_blank" @click.stop="">
+          <v-icon class="mr-1">mdi-open-in-new</v-icon> Link to Car
+        </a>
+      </div>
+
       <v-spacer></v-spacer>
       <v-icon @click.stop="$emit('delete')" color="red" icon="mdi-delete" />
     </v-card-actions>

@@ -17,7 +17,8 @@ export class Car {
     public details: string,
     public color: string,
     public hotness: number = 10,
-    public isSale: boolean = false
+    public isSale: boolean = false,
+    public link: string = ""
   ) {
     if (sellMiles < miles) {
       this.sellMiles = carOptions.maxMiles;
@@ -103,7 +104,8 @@ export class Car {
       newCar.details,
       newCar.color,
       Number(newCar.hotness),
-      newCar.isSale
+      newCar.isSale,
+      newCar.link
     );
     return car;
   }
